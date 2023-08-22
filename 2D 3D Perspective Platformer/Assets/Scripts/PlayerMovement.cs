@@ -1,6 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Horizontal Movement")]
     [SerializeField] float speed;
+    [SerializeField] float speedCap;
 
     [Header("Jumping")]
     [SerializeField] float jumpForce;
@@ -25,6 +27,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] bool currentlyRotating;
     [SerializeField] Quaternion currentRotation;
 
+    [Header("Charged Directional Dash")]
+    [SerializeField] Vector3 mousePosition;
+    [SerializeField] float dashForce;
+    [SerializeField] float currentChargeTime;
+    [SerializeField] float chargeTime;
+    [SerializeField] bool charging;
+    [SerializeField] float dashCancelTime;
+    [SerializeField] bool dashing;
     private bool moving;
     void Start()
     {
@@ -34,30 +44,61 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (moving)
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
-            rb.velocity = speed * input.x * transform.right + transform.up * rb.velocity.y;
+            mousePosition = hit.point;
+        }
+
+        if (charging)
+        {
+            currentChargeTime += Time.deltaTime;
+            currentChargeTime = Mathf.Clamp(currentChargeTime, 0, chargeTime);
+            rb.velocity = Vector3.zero;
         }
         else
         {
-            rb.velocity = new(0, rb.velocity.y);
-        }
-
-        if (currentlyRotating)
-        {
-            if (!rotated) currentRotation = Quaternion.Euler(0, Mathf.Lerp(0, -90, currentRotationTime / rotationTime), 0);
-            else currentRotation = Quaternion.Euler(0, Mathf.Lerp(-90, 0, currentRotationTime / rotationTime), 0);
-            currentRotationTime += Time.deltaTime;
-
-            if (currentRotationTime >= rotationTime)
+            if (currentChargeTime > 0)
             {
-                currentRotationTime = 0;
-                rotated = !rotated;
-                currentlyRotating = false;
+                Debug.Log("Dash");
+                rb.AddForce((mousePosition - transform.position).normalized * dashForce * (currentChargeTime / chargeTime), ForceMode.Impulse);
+                currentChargeTime = 0;
+                StartCoroutine(DashDelay());
             }
 
-            transform.rotation = currentRotation;
+            if (dashing) return;
+
+            if (moving)
+            {
+                //rb.velocity = speed * input.x * transform.right + transform.up * rb.velocity.y;
+                rb.AddForce(transform.right * speed * input.x);
+                rb.velocity = new(Mathf.Clamp(rb.velocity.x, -speedCap, speedCap), rb.velocity.y);
+            }
+            //else
+            //{
+            //    rb.velocity = new(0, rb.velocity.y);
+            //}
+
+
+            if (currentlyRotating)
+            {
+                if (!rotated) currentRotation = Quaternion.Euler(0, Mathf.Lerp(0, -90, currentRotationTime / rotationTime), 0);
+                else currentRotation = Quaternion.Euler(0, Mathf.Lerp(-90, 0, currentRotationTime / rotationTime), 0);
+                currentRotationTime += Time.deltaTime;
+
+                if (currentRotationTime >= rotationTime)
+                {
+                    currentRotationTime = 0;
+                    rotated = !rotated;
+                    currentlyRotating = false;
+                }
+
+                transform.rotation = currentRotation;
+            }
         }
+
     }
 
     void OnMove(InputValue value)
@@ -79,8 +120,20 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!currentlyRotating) currentlyRotating = true;
     }
+
+    void OnDash(InputValue value)
+    {
+        charging = value.Get<float>() == 1;
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground") && Physics.Raycast(transform.position, -transform.up)) grounded = true;
+    }
+
+    IEnumerator DashDelay()
+    {
+        dashing = true;
+        yield return new WaitForSeconds(dashCancelTime);
+        dashing = false;
     }
 }
