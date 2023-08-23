@@ -74,7 +74,9 @@ public class PlayerMovement : MonoBehaviour
             {
                 //rb.velocity = speed * input.x * transform.right + transform.up * rb.velocity.y;
                 rb.AddForce(transform.right * speed * input.x);
-                rb.velocity = new(Mathf.Clamp(rb.velocity.x, -speedCap, speedCap), rb.velocity.y);
+                if (!rotated) rb.velocity = new(Mathf.Clamp(rb.velocity.x, -speedCap, speedCap), rb.velocity.y);
+                else rb.velocity = new(rb.velocity.x, rb.velocity.y, Mathf.Clamp(rb.velocity.z, -speedCap, speedCap));
+
             }
             //else
             //{
@@ -127,7 +129,26 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground") && Physics.Raycast(transform.position, -transform.up)) grounded = true;
+
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            if (Physics.Raycast(transform.position, -transform.up))
+            {
+                grounded = true;
+                return;
+            }
+            for (int i = -1; i <= 1; i += 2)
+            {
+                for (int j = -1; i <= 1; j += 2)
+                {
+                    if (Physics.Raycast(transform.position + transform.right * transform.localScale.x / 2 * i + transform.forward * transform.localScale.z / 2 * j, -transform.up))
+                    {
+                        grounded = true;
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     IEnumerator DashDelay()
