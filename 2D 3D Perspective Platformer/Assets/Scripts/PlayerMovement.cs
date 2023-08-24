@@ -129,7 +129,6 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-
         if (collision.gameObject.CompareTag("Ground"))
         {
             if (Physics.Raycast(transform.position, -transform.up))
@@ -139,7 +138,7 @@ public class PlayerMovement : MonoBehaviour
             }
             for (int i = -1; i <= 1; i += 2)
             {
-                for (int j = -1; i <= 1; j += 2)
+                for (int j = -1; j <= 1; j += 2)
                 {
                     if (Physics.Raycast(transform.position + transform.right * transform.localScale.x / 2 * i + transform.forward * transform.localScale.z / 2 * j, -transform.up))
                     {
