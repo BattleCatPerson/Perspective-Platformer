@@ -8,21 +8,22 @@ using UnityEditor;
 [CanEditMultipleObjects]
 public class SetTagsEditor : Editor
 {
-    SerializedProperty floors;
     SerializedProperty tag;
-
+    SerializedProperty material;
     private void OnEnable()
     {
         tag = serializedObject.FindProperty("tagName");
-        floors = serializedObject.FindProperty("floors");
+        material = serializedObject.FindProperty("material");
     }
 
     public override void OnInspectorGUI()
     {
         EditorGUILayout.PropertyField(tag);
+        EditorGUILayout.PropertyField(material);
+
 
         SetTags s = (SetTags)target;
-        if (GUILayout.Button("Assign Tags"))
+        if (GUILayout.Button("Assign"))
         {
             s.Assign();
         }

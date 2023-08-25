@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class SetTags : MonoBehaviour
 {
-    public List<GameObject> floors;
     public string tagName;
+    public PhysicMaterial material;
     void Start()
     {
         
@@ -20,6 +20,10 @@ public class SetTags : MonoBehaviour
 
     public void Assign()
     {
-        for (int i = 0; i < transform.childCount; i++) transform.GetChild(i).tag = tagName;
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).tag = tagName;
+            transform.GetChild(i).GetComponent<Collider>().material = material;
+        }
     }
 }
