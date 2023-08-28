@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] float speedCap;
     [SerializeField] Transform wall;
+    [SerializeField] float control;
 
     [Header("Jumping")]
     [SerializeField] float jumpForce;
@@ -29,11 +30,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Quaternion currentRotation;
 
     [Header("Charged Directional Dash")]
-    [SerializeField] Vector3 mousePosition;
+    [SerializeField] Vector3 dashDirection;
     [SerializeField] float dashForce;
-    [SerializeField] float currentChargeTime;
-    [SerializeField] float chargeTime;
-    [SerializeField] bool charging;
     [SerializeField] float dashCancelTime;
     [SerializeField] bool dashing;
     [SerializeField] bool canDash;
@@ -43,68 +41,49 @@ public class PlayerMovement : MonoBehaviour
     {
         grounded = true;
         canDash = true;
+        control = 1;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        if (dashing && rb.velocity.magnitude > 0.1f)
         {
-            mousePosition = new Vector3(hit.point.x, hit.point.y, transform.position.z);
+            rb.velocity -= dashDirection * (dashForce / dashCancelTime) * Time.deltaTime;
+            control += Time.deltaTime / dashCancelTime;
         }
 
-        if (charging)
+        if (moving)
         {
-            currentChargeTime += Time.deltaTime;
-            currentChargeTime = Mathf.Clamp(currentChargeTime, 0, chargeTime);
-            rb.velocity = Vector3.zero;
+            //rb.velocity = speed * input.x * transform.right + transform.up * rb.velocity.y;
+            if (wall != null && Mathf.Abs(transform.position.x + input.x - wall.position.x) > Mathf.Abs(transform.position.x - wall.position.x) || wall == null)
+            {
+                rb.AddForce(transform.right * speed * input.x * control);
+                if (!rotated && !dashing) rb.velocity = new(Mathf.Clamp(rb.velocity.x, -speedCap, speedCap), rb.velocity.y);
+                //else rb.velocity = new(rb.velocity.x, rb.velocity.y, Mathf.Clamp(rb.velocity.z, -speedCap, speedCap));
+            }
         }
-        else
+        //else
+        //{
+        //    rb.velocity = new(0, rb.velocity.y);
+        //}
+
+
+        if (currentlyRotating)
         {
-            if (currentChargeTime > 0)
+            if (!rotated) currentRotation = Quaternion.Euler(0, Mathf.Lerp(0, -90, currentRotationTime / rotationTime), 0);
+            else currentRotation = Quaternion.Euler(0, Mathf.Lerp(-90, 0, currentRotationTime / rotationTime), 0);
+            currentRotationTime += Time.deltaTime;
+
+            if (currentRotationTime >= rotationTime)
             {
-                rb.AddForce((mousePosition - transform.position).normalized * dashForce * (currentChargeTime / chargeTime), ForceMode.Impulse);
-                currentChargeTime = 0;
-                StartCoroutine(DashDelay());
-                canDash = false;
+                currentRotationTime = 0;
+                rotated = !rotated;
+                currentlyRotating = false;
             }
 
-            if (dashing) return;
-
-            if (moving)
-            {
-                //rb.velocity = speed * input.x * transform.right + transform.up * rb.velocity.y;
-                if (wall != null && Mathf.Abs(transform.position.x + input.x - wall.position.x) > Mathf.Abs(transform.position.x - wall.position.x) || wall == null)
-                {
-                    rb.AddForce(transform.right * speed * input.x);
-                    if (!rotated) rb.velocity = new(Mathf.Clamp(rb.velocity.x, -speedCap, speedCap), rb.velocity.y);
-                    else rb.velocity = new(rb.velocity.x, rb.velocity.y, Mathf.Clamp(rb.velocity.z, -speedCap, speedCap));
-                }
-            }
-            //else
-            //{
-            //    rb.velocity = new(0, rb.velocity.y);
-            //}
-
-
-            if (currentlyRotating)
-            {
-                if (!rotated) currentRotation = Quaternion.Euler(0, Mathf.Lerp(0, -90, currentRotationTime / rotationTime), 0);
-                else currentRotation = Quaternion.Euler(0, Mathf.Lerp(-90, 0, currentRotationTime / rotationTime), 0);
-                currentRotationTime += Time.deltaTime;
-
-                if (currentRotationTime >= rotationTime)
-                {
-                    currentRotationTime = 0;
-                    rotated = !rotated;
-                    currentlyRotating = false;
-                }
-
-                transform.rotation = currentRotation;
-            }
+            transform.rotation = currentRotation;
         }
 
     }
@@ -129,14 +108,32 @@ public class PlayerMovement : MonoBehaviour
         if (!currentlyRotating) currentlyRotating = true;
     }
 
-    void OnDash(InputValue value)
+    void OnDash()
     {
-        charging = value.Get<float>() == 1 && canDash;
+        if (!canDash) return;
+        dashDirection = new Vector3(input.x, input.y).normalized;
+        if (dashDirection == Vector3.zero) return;
+        control = 0;
+        rb.velocity = dashDirection * dashForce;
+        StartCoroutine("DashDelay");
+        canDash = false;
     }
     private void OnCollisionEnter(Collision collision)
     {
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
         if (collision.gameObject.CompareTag("Ground"))
         {
+            if (dashing)
+            {
+                StopCoroutine("DashDelay");
+                control = 1;
+                dashing = false;
+            }
+            
+            
             RaycastHit hit;
             if (Physics.Raycast(transform.position, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
             {
@@ -167,12 +164,15 @@ public class PlayerMovement : MonoBehaviour
         {
             grounded = false;
             wall = null;
+            rb.useGravity = true;
         }
     }
     IEnumerator DashDelay()
     {
+        rb.useGravity = false;
         dashing = true;
         yield return new WaitForSeconds(dashCancelTime);
+        rb.useGravity = true;
         dashing = false;
     }
 }
