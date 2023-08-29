@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float speedCap;
     [SerializeField] Transform wall;
     [SerializeField] float control;
+    [SerializeField] float controlThreshold;
 
     [Header("Jumping")]
     [SerializeField] float jumpForce;
@@ -36,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] bool dashing;
     [SerializeField] bool canDash;
     [SerializeField] float dashCooldown;
+    [SerializeField] bool dashInput;
     private bool moving;
     void Start()
     {
@@ -47,17 +49,24 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (control >= controlThreshold) rb.useGravity = true;
+        if (dashInput && !grounded && canDash) Dash();
         if (dashing && rb.velocity.magnitude > 0.1f)
         {
             rb.velocity -= dashDirection * (dashForce / dashCancelTime) * Time.deltaTime;
             control += Time.deltaTime / dashCancelTime;
         }
+        else if (dashing && rb.velocity.magnitude <= 0.1f)
+        {
+            StopCoroutine("DashDelay");
+            control = 1;
+            dashing = false;
+        }
 
         if (moving)
         {
             //rb.velocity = speed * input.x * transform.right + transform.up * rb.velocity.y;
-            if (wall != null && Mathf.Abs(transform.position.x + input.x - wall.position.x) > Mathf.Abs(transform.position.x - wall.position.x) || wall == null)
+            if (wall != null && control >= controlThreshold && Mathf.Abs(transform.position.x + input.x - wall.position.x) > Mathf.Abs(transform.position.x - wall.position.x) || wall == null)
             {
                 rb.AddForce(transform.right * speed * input.x * control);
                 if (!rotated && !dashing) rb.velocity = new(Mathf.Clamp(rb.velocity.x, -speedCap, speedCap), rb.velocity.y);
@@ -110,19 +119,10 @@ public class PlayerMovement : MonoBehaviour
 
     void OnDash()
     {
-        if (!canDash) return;
         dashDirection = new Vector3(input.x, input.y).normalized;
-        if (dashDirection == Vector3.zero) return;
-        control = 0;
-        rb.velocity = dashDirection * dashForce;
-        StartCoroutine("DashDelay");
-        canDash = false;
+        if (canDash) dashInput = true;
     }
     private void OnCollisionEnter(Collision collision)
-    {
-    }
-
-    private void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
@@ -132,8 +132,8 @@ public class PlayerMovement : MonoBehaviour
                 control = 1;
                 dashing = false;
             }
-            
-            
+
+
             RaycastHit hit;
             if (Physics.Raycast(transform.position, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
             {
@@ -158,13 +158,46 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            RaycastHit hit;
+
+            if (dashInput && canDash && !(Physics.Raycast(transform.position, dashDirection, out hit) && hit.collider.gameObject == collision.gameObject) && dashDirection != Vector3.zero)
+            {
+                Dash();
+            }
+
+            
+            if (dashing) return;
+            if (Physics.Raycast(transform.position, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
+            {
+                canDash = true;
+                return;
+            }
+            for (int i = -1; i <= 1; i += 2)
+            {
+                for (int j = -1; j <= 1; j += 2)
+                {
+                    if (Physics.Raycast(transform.position + transform.right * transform.localScale.x / 2 * i + transform.forward * transform.localScale.z / 2 * j, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
+                    {
+                        canDash = true;
+                        return;
+                    }
+                }
+            }
+
+        }
+    }
+
     private void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
             grounded = false;
             wall = null;
-            rb.useGravity = true;
         }
     }
     IEnumerator DashDelay()
@@ -174,5 +207,14 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(dashCancelTime);
         rb.useGravity = true;
         dashing = false;
+    }
+
+    public void Dash()
+    {
+        control = 0;
+        rb.velocity = dashDirection * dashForce;
+        StartCoroutine("DashDelay");
+        canDash = false;
+        dashInput = false;
     }
 }
