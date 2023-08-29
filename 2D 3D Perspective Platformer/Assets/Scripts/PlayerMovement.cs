@@ -53,7 +53,14 @@ public class PlayerMovement : MonoBehaviour
         if (dashInput && !grounded && canDash) Dash();
         if (dashing && rb.velocity.magnitude > 0.1f)
         {
-            rb.velocity -= dashDirection * (dashForce / dashCancelTime) * Time.deltaTime;
+            if (dashDirection.y > 0)
+            {
+                rb.velocity -= dashDirection * (dashForce / dashCancelTime) * Time.deltaTime;
+            }
+            else
+            {
+                rb.velocity -= Vector3.right * dashDirection.x * (dashForce / dashCancelTime) * Time.deltaTime;
+            }
             control += Time.deltaTime / dashCancelTime;
         }
         else if (dashing && rb.velocity.magnitude <= 0.1f)
