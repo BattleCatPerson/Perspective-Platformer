@@ -177,7 +177,7 @@ public class PlayerMovement : MonoBehaviour
                 Dash();
             }
 
-            
+
             if (dashing) return;
             if (Physics.Raycast(transform.position, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
             {
@@ -201,7 +201,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        RaycastHit hit;
+        if (collision.gameObject.CompareTag("Ground") && Physics.Raycast(transform.position, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
         {
             grounded = false;
             wall = null;
