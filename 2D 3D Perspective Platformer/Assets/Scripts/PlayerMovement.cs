@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Horizontal Movement")]
     [SerializeField] float speed;
     [SerializeField] float speedCap;
+    [SerializeField] Transform ground;
     [SerializeField] Transform wall;
     [SerializeField] float control;
     [SerializeField] float controlThreshold;
@@ -145,6 +146,7 @@ public class PlayerMovement : MonoBehaviour
             if (Physics.Raycast(transform.position, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
             {
                 grounded = true;
+                ground = hit.collider.transform;
                 canDash = true;
                 return;
             }
@@ -201,12 +203,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        RaycastHit hit;
-        if (collision.gameObject.CompareTag("Ground") && Physics.Raycast(transform.position, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
+        if (collision.transform == ground)
         {
             grounded = false;
-            wall = null;
+            ground = null;
         }
+        if (collision.transform == wall) wall = null;
     }
     IEnumerator DashDelay()
     {

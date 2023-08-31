@@ -507,7 +507,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1718738477}
-  m_RootOrder: 28
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &87642928
 BoxCollider:
@@ -766,7 +766,7 @@ GameObject:
   - component: {fileID: 120973490}
   m_Layer: 0
   m_Name: Spike (3)
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -784,8 +784,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1511659215}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 14
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 135}
 --- !u!65 &120973490
 BoxCollider:
@@ -800,6 +800,68 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.4, z: 1}
   m_Center: {x: 0, y: 0.1, z: 0}
+--- !u!1 &128649832
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 128649834}
+  - component: {fileID: 128649833}
+  m_Layer: 0
+  m_Name: Hazards
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &128649833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128649832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a41e844d0cca3a409cef2a446fedaf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tagName: Hazard
+  material: {fileID: 0}
+--- !u!4 &128649834
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128649832}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 832646456}
+  - {fileID: 2079199645}
+  - {fileID: 1494274729}
+  - {fileID: 120973489}
+  - {fileID: 2022980860}
+  - {fileID: 667899835}
+  - {fileID: 1411893100}
+  - {fileID: 1192867768}
+  - {fileID: 2058135400}
+  - {fileID: 1518196288}
+  - {fileID: 1766942802}
+  - {fileID: 649372207}
+  - {fileID: 414074722}
+  - {fileID: 1551258947}
+  - {fileID: 1811889361}
+  - {fileID: 926776252}
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &170259273
 GameObject:
   m_ObjectHideFlags: 0
@@ -1017,6 +1079,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 200
       objectReference: {fileID: 0}
+    - target: {fileID: 6251606273162874952, guid: 38efc41ed27bda34bb2e36a15960e2d2,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6251606273162874953, guid: 38efc41ed27bda34bb2e36a15960e2d2,
         type: 3}
       propertyPath: dashForce
@@ -1050,12 +1117,12 @@ PrefabInstance:
     - target: {fileID: 6251606273162874967, guid: 38efc41ed27bda34bb2e36a15960e2d2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.22
+      value: 16.07
       objectReference: {fileID: 0}
     - target: {fileID: 6251606273162874967, guid: 38efc41ed27bda34bb2e36a15960e2d2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.58
+      value: 15.6
       objectReference: {fileID: 0}
     - target: {fileID: 6251606273162874967, guid: 38efc41ed27bda34bb2e36a15960e2d2,
         type: 3}
@@ -1102,6 +1169,11 @@ PrefabInstance:
       propertyPath: orthographic
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9141530071635190732, guid: 38efc41ed27bda34bb2e36a15960e2d2,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 17f552717c09d4747bb49b1b92f714a9, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38efc41ed27bda34bb2e36a15960e2d2, type: 3}
 --- !u!1 &308456771
@@ -1305,7 +1377,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &414074721
 GameObject:
@@ -1319,7 +1391,7 @@ GameObject:
   - component: {fileID: 414074723}
   m_Layer: 0
   m_Name: Spike (15)
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1337,8 +1409,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 170259274}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 23
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 315}
 --- !u!65 &414074723
 BoxCollider:
@@ -1367,7 +1439,7 @@ GameObject:
   - component: {fileID: 420436373}
   m_Layer: 0
   m_Name: Cube (5)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1394,7 +1466,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 420436371}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 26f425bf50bee654986c5430cc47ea4c, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -1450,6 +1522,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 420436371}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &503367221 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6251606273162874963, guid: 38efc41ed27bda34bb2e36a15960e2d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 301882623}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &503367229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 503367221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6cbb02a2f8cac842afaa65072aeaaca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  respawnPoint: {fileID: 1972158877}
+  rb: {fileID: 0}
+  respawnDelay: 2
 --- !u!1 &567805904
 GameObject:
   m_ObjectHideFlags: 0
@@ -1559,7 +1652,7 @@ GameObject:
   - component: {fileID: 649372208}
   m_Layer: 0
   m_Name: Spike (14)
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1577,8 +1670,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1216754234}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 22
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 315}
 --- !u!65 &649372208
 BoxCollider:
@@ -1605,7 +1698,7 @@ GameObject:
   - component: {fileID: 667899836}
   m_Layer: 0
   m_Name: Spike (5)
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1623,8 +1716,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 761395631}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 16
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 135}
 --- !u!65 &667899836
 BoxCollider:
@@ -1833,7 +1926,7 @@ GameObject:
   - component: {fileID: 832646453}
   m_Layer: 0
   m_Name: Spike
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1864,8 +1957,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1756680703}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 11
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 135}
 --- !u!1 &883869303
 GameObject:
@@ -1899,7 +1992,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1718738477}
-  m_RootOrder: 27
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &883869305
 BoxCollider:
@@ -1978,7 +2071,7 @@ GameObject:
   - component: {fileID: 889081069}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1991,7 +2084,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 889081067}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 21.45, y: 18.2076, z: 4.8206596}
+  m_LocalPosition: {x: 21.45, y: 18.2076, z: 0}
   m_LocalScale: {x: 1, y: 3.8951, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2005,7 +2098,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 889081067}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 26f425bf50bee654986c5430cc47ea4c, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -2073,7 +2166,7 @@ GameObject:
   - component: {fileID: 926776253}
   m_Layer: 0
   m_Name: Spike (18)
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2091,8 +2184,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2110968214}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 26
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 315}
 --- !u!65 &926776253
 BoxCollider:
@@ -2265,7 +2358,7 @@ GameObject:
   - component: {fileID: 1192867769}
   m_Layer: 0
   m_Name: Spike (7)
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2283,8 +2376,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1944144859}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 18
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 135}
 --- !u!65 &1192867769
 BoxCollider:
@@ -2663,7 +2756,7 @@ GameObject:
   - component: {fileID: 1411893101}
   m_Layer: 0
   m_Name: Spike (6)
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2681,8 +2774,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1269815015}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 17
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 135}
 --- !u!65 &1411893101
 BoxCollider:
@@ -2796,7 +2889,7 @@ GameObject:
   - component: {fileID: 1479278147}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2809,7 +2902,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1479278145}
   m_LocalRotation: {x: 0, y: 0, z: 0.38268343, w: 0.92387956}
-  m_LocalPosition: {x: 24.122719, y: 13.794438, z: 4.8206596}
+  m_LocalPosition: {x: 24.122719, y: 13.794438, z: 0}
   m_LocalScale: {x: 1, y: 7.9738, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2823,7 +2916,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1479278145}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 26f425bf50bee654986c5430cc47ea4c, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -2891,7 +2984,7 @@ GameObject:
   - component: {fileID: 1494274730}
   m_Layer: 0
   m_Name: Spike (2)
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2909,8 +3002,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 12211617}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 13
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 135}
 --- !u!65 &1494274730
 BoxCollider:
@@ -3022,7 +3115,7 @@ GameObject:
   - component: {fileID: 1518196289}
   m_Layer: 0
   m_Name: Spike (9)
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3040,8 +3133,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1530552272}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 20
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 135}
 --- !u!65 &1518196289
 BoxCollider:
@@ -3153,7 +3246,7 @@ GameObject:
   - component: {fileID: 1551258948}
   m_Layer: 0
   m_Name: Spike (16)
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3171,8 +3264,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 13243972}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 24
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 315}
 --- !u!65 &1551258948
 BoxCollider:
@@ -3392,7 +3485,7 @@ GameObject:
   - component: {fileID: 1718738477}
   - component: {fileID: 1718738478}
   m_Layer: 0
-  m_Name: Environment
+  m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3421,26 +3514,10 @@ Transform:
   - {fileID: 1706371075}
   - {fileID: 1658370672}
   - {fileID: 889081068}
-  - {fileID: 832646456}
-  - {fileID: 2079199645}
-  - {fileID: 1494274729}
-  - {fileID: 120973489}
-  - {fileID: 2022980860}
-  - {fileID: 667899835}
-  - {fileID: 1411893100}
-  - {fileID: 1192867768}
-  - {fileID: 2058135400}
-  - {fileID: 1518196288}
-  - {fileID: 1766942802}
-  - {fileID: 649372207}
-  - {fileID: 414074722}
-  - {fileID: 1551258947}
-  - {fileID: 1811889361}
-  - {fileID: 926776252}
   - {fileID: 883869304}
   - {fileID: 87642927}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1718738478
 MonoBehaviour:
@@ -3553,7 +3630,7 @@ GameObject:
   - component: {fileID: 1766942803}
   m_Layer: 0
   m_Name: Spike (13)
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3571,8 +3648,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 61780491}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 21
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 315}
 --- !u!65 &1766942803
 BoxCollider:
@@ -3599,7 +3676,7 @@ GameObject:
   - component: {fileID: 1811889362}
   m_Layer: 0
   m_Name: Spike (17)
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3617,8 +3694,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1417691310}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 25
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 315}
 --- !u!65 &1811889362
 BoxCollider:
@@ -3718,6 +3795,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1972158876
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1972158877}
+  m_Layer: 0
+  m_Name: Spawn Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1972158877
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972158876}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2022980859
 GameObject:
   m_ObjectHideFlags: 0
@@ -3730,7 +3838,7 @@ GameObject:
   - component: {fileID: 2022980861}
   m_Layer: 0
   m_Name: Spike (4)
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3748,8 +3856,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 308456772}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 15
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 135}
 --- !u!65 &2022980861
 BoxCollider:
@@ -3776,7 +3884,7 @@ GameObject:
   - component: {fileID: 2058135401}
   m_Layer: 0
   m_Name: Spike (8)
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3794,8 +3902,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 115428210}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 19
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 135}
 --- !u!65 &2058135401
 BoxCollider:
@@ -3822,7 +3930,7 @@ GameObject:
   - component: {fileID: 2079199646}
   m_Layer: 0
   m_Name: Spike (1)
-  m_TagString: Untagged
+  m_TagString: Hazard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3840,8 +3948,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1396052771}
-  m_Father: {fileID: 1718738477}
-  m_RootOrder: 12
+  m_Father: {fileID: 128649834}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 135}
 --- !u!65 &2079199646
 BoxCollider:

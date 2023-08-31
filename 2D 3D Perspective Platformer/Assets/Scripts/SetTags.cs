@@ -23,7 +23,7 @@ public class SetTags : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).tag = tagName;
-            transform.GetChild(i).GetComponent<Collider>().material = material;
+            if (material != null) transform.GetChild(i).GetComponent<Collider>().material = material;
         }
     }
 }
