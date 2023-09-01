@@ -5,6 +5,10 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public enum Dimension
+{
+    Two, Three
+}
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
@@ -24,13 +28,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float jumpForce;
     [SerializeField] bool grounded;
 
-    [Header("Camera Rotation")]
-    [SerializeField] bool rotated;
-    [SerializeField] float rotationTime;
-    [SerializeField] float currentRotationTime;
-    [SerializeField] bool currentlyRotating;
-    [SerializeField] Quaternion currentRotation;
-
     [Header("Charged Directional Dash")]
     [SerializeField] Vector3 dashDirection;
     [SerializeField] float dashForce;
@@ -39,9 +36,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] bool canDash;
     [SerializeField] float dashCooldown;
     [SerializeField] bool dashInput;
+
+    [Header("3D")]
+    [SerializeField] Dimension dimension = Dimension.Two;
     private bool moving;
     void Start()
     {
+        dimension = Dimension.Two;
         grounded = true;
         canDash = true;
         control = 1;
@@ -51,58 +52,8 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         if (control >= controlThreshold) rb.useGravity = true;
-        if (dashInput && !grounded && canDash) Dash();
-        if (dashing && rb.velocity.magnitude > 0.1f)
-        {
-            if (dashDirection.y > 0)
-            {
-                rb.velocity -= dashDirection * (dashForce / dashCancelTime) * Time.deltaTime;
-            }
-            else
-            {
-                rb.velocity -= Vector3.right * dashDirection.x * (dashForce / dashCancelTime) * Time.deltaTime;
-            }
-            control += Time.deltaTime / dashCancelTime;
-        }
-        else if (dashing && rb.velocity.magnitude <= 0.1f)
-        {
-            StopCoroutine("DashDelay");
-            control = 1;
-            dashing = false;
-        }
-
-        if (moving)
-        {
-            //rb.velocity = speed * input.x * transform.right + transform.up * rb.velocity.y;
-            if (wall != null && control >= controlThreshold && Mathf.Abs(transform.position.x + input.x - wall.position.x) > Mathf.Abs(transform.position.x - wall.position.x) || wall == null)
-            {
-                rb.AddForce(transform.right * speed * input.x * control);
-                if (!rotated && !dashing) rb.velocity = new(Mathf.Clamp(rb.velocity.x, -speedCap, speedCap), rb.velocity.y);
-                //else rb.velocity = new(rb.velocity.x, rb.velocity.y, Mathf.Clamp(rb.velocity.z, -speedCap, speedCap));
-            }
-        }
-        //else
-        //{
-        //    rb.velocity = new(0, rb.velocity.y);
-        //}
-
-
-        if (currentlyRotating)
-        {
-            if (!rotated) currentRotation = Quaternion.Euler(0, Mathf.Lerp(0, -90, currentRotationTime / rotationTime), 0);
-            else currentRotation = Quaternion.Euler(0, Mathf.Lerp(-90, 0, currentRotationTime / rotationTime), 0);
-            currentRotationTime += Time.deltaTime;
-
-            if (currentRotationTime >= rotationTime)
-            {
-                currentRotationTime = 0;
-                rotated = !rotated;
-                currentlyRotating = false;
-            }
-
-            transform.rotation = currentRotation;
-        }
-
+        if (dimension == Dimension.Two) Movement2D();
+        else Movement3D();
     }
 
     void OnMove(InputValue value)
@@ -120,15 +71,10 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void OnRotateCamera()
-    {
-        if (!currentlyRotating) currentlyRotating = true;
-    }
-
     void OnDash()
     {
         dashDirection = new Vector3(input.x, input.y).normalized;
-        if (canDash) dashInput = true;
+        if (canDash && dashDirection != Vector3.zero) dashInput = true;
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -173,12 +119,6 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             RaycastHit hit;
-
-            if (dashInput && canDash && !(Physics.Raycast(transform.position, dashDirection, out hit) && hit.collider.gameObject == collision.gameObject) && dashDirection != Vector3.zero)
-            {
-                Dash();
-            }
-
 
             if (dashing) return;
             if (Physics.Raycast(transform.position, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
@@ -226,5 +166,48 @@ public class PlayerMovement : MonoBehaviour
         StartCoroutine("DashDelay");
         canDash = false;
         dashInput = false;
+    }
+
+    public void Movement2D()
+    {
+        if (dashInput && !grounded && canDash) Dash();
+        else if (grounded && dashInput && canDash && dashDirection != Vector3.zero)
+        {
+            RaycastHit hit;
+            if ((Physics.Raycast(transform.position, dashDirection, out hit) && (hit.collider.gameObject == ground || hit.collider.gameObject == wall))) return;
+            Dash();
+        }
+        if (dashing && rb.velocity.magnitude > 0.1f)
+        {
+            if (dashDirection.y > 0)
+            {
+                rb.velocity -= dashDirection * (dashForce / dashCancelTime) * Time.deltaTime;
+            }
+            else
+            {
+                rb.velocity -= Vector3.right * dashDirection.x * (dashForce / dashCancelTime) * Time.deltaTime;
+            }
+            control += Time.deltaTime / dashCancelTime;
+        }
+        else if (dashing && rb.velocity.magnitude <= 0.1f)
+        {
+            StopCoroutine("DashDelay");
+            control = 1;
+            dashing = false;
+        }
+
+        if (moving)
+        {
+            if (wall != null && control >= controlThreshold && Mathf.Abs(transform.position.x + input.x - wall.position.x) > Mathf.Abs(transform.position.x - wall.position.x) || wall == null)
+            {
+                rb.AddForce(transform.right * speed * input.x * control);
+                if (!dashing) rb.velocity = new(Mathf.Clamp(rb.velocity.x, -speedCap, speedCap), rb.velocity.y);
+            }
+        }
+    }
+
+    public void Movement3D()
+    {
+
     }
 }
