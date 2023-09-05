@@ -17,8 +17,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Vector2 input;
 
     [Header("Horizontal Movement")]
+    [SerializeField] bool moving;
     [SerializeField] float speed;
     [SerializeField] float speedCap;
+    [SerializeField] float sRootSpeedCap;
     [SerializeField] Transform ground;
     [SerializeField] Transform wall;
     [SerializeField] float control;
@@ -39,17 +41,18 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("3D")]
     [SerializeField] Dimension dimension = Dimension.Two;
-    private bool moving;
+    [SerializeField] bool doubleJumped;
+    [SerializeField] float doubleJumpForce;
     void Start()
     {
-        dimension = Dimension.Two;
+        //dimension = Dimension.Two;
         grounded = true;
         canDash = true;
         control = 1;
+        sRootSpeedCap = Mathf.Sqrt(Mathf.Pow(speedCap, 2) / 2);
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (control >= controlThreshold) rb.useGravity = true;
         if (dimension == Dimension.Two) Movement2D();
@@ -59,7 +62,7 @@ public class PlayerMovement : MonoBehaviour
     void OnMove(InputValue value)
     {
         input = value.Get<Vector2>();
-        moving = input.x != 0;
+        moving = (dimension == Dimension.Two && input.x != 0) || (dimension == Dimension.Three && (input.magnitude > 0));
     }
 
     void OnJump()
@@ -69,11 +72,17 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
             grounded = false;
         }
+        else if (!doubleJumped && dimension == Dimension.Three)
+        {
+            rb.velocity = new(rb.velocity.x, 0, rb.velocity.z);
+            rb.AddForce(transform.up * doubleJumpForce, ForceMode.Impulse);
+            doubleJumped = true;
+        }
     }
 
     void OnDash()
     {
-        dashDirection = new Vector3(input.x, input.y).normalized;
+        dashDirection = dimension == Dimension.Two ? new Vector3(input.x, input.y).normalized : new Vector3(input.x, 0, input.y);
         if (canDash && dashDirection != Vector3.zero) dashInput = true;
     }
     private void OnCollisionEnter(Collision collision)
@@ -83,8 +92,7 @@ public class PlayerMovement : MonoBehaviour
             if (dashing)
             {
                 StopCoroutine("DashDelay");
-                control = 1;
-                dashing = false;
+                StopDash();
             }
 
 
@@ -92,6 +100,7 @@ public class PlayerMovement : MonoBehaviour
             if (Physics.Raycast(transform.position, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
             {
                 grounded = true;
+                doubleJumped = false;
                 ground = hit.collider.transform;
                 canDash = true;
                 return;
@@ -103,6 +112,7 @@ public class PlayerMovement : MonoBehaviour
                     if (Physics.Raycast(transform.position + transform.right * transform.localScale.x / 2 * i + transform.forward * transform.localScale.z / 2 * j, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
                     {
                         grounded = true;
+                        doubleJumped = false;
                         canDash = true;
                         return;
                     }
@@ -156,11 +166,14 @@ public class PlayerMovement : MonoBehaviour
         dashing = true;
         yield return new WaitForSeconds(dashCancelTime);
         rb.useGravity = true;
-        dashing = false;
+        StopDash();
     }
 
     public void Dash()
     {
+
+        
+
         control = 0;
         rb.velocity = dashDirection * dashForce;
         StartCoroutine("DashDelay");
@@ -170,35 +183,11 @@ public class PlayerMovement : MonoBehaviour
 
     public void Movement2D()
     {
-        if (dashInput && !grounded && canDash) Dash();
-        else if (grounded && dashInput && canDash && dashDirection != Vector3.zero)
-        {
-            RaycastHit hit;
-            if ((Physics.Raycast(transform.position, dashDirection, out hit) && (hit.collider.gameObject == ground || hit.collider.gameObject == wall))) return;
-            Dash();
-        }
-        if (dashing && rb.velocity.magnitude > 0.1f)
-        {
-            if (dashDirection.y > 0)
-            {
-                rb.velocity -= dashDirection * (dashForce / dashCancelTime) * Time.deltaTime;
-            }
-            else
-            {
-                rb.velocity -= Vector3.right * dashDirection.x * (dashForce / dashCancelTime) * Time.deltaTime;
-            }
-            control += Time.deltaTime / dashCancelTime;
-        }
-        else if (dashing && rb.velocity.magnitude <= 0.1f)
-        {
-            StopCoroutine("DashDelay");
-            control = 1;
-            dashing = false;
-        }
+        DashControl();
 
         if (moving)
         {
-            if (wall != null && control >= controlThreshold && Mathf.Abs(transform.position.x + input.x - wall.position.x) > Mathf.Abs(transform.position.x - wall.position.x) || wall == null)
+            if (((wall != null && Mathf.Abs(transform.position.x + input.x - wall.position.x) > Mathf.Abs(transform.position.x - wall.position.x)) || wall == null) && control >= controlThreshold)
             {
                 rb.AddForce(transform.right * speed * input.x * control);
                 if (!dashing) rb.velocity = new(Mathf.Clamp(rb.velocity.x, -speedCap, speedCap), rb.velocity.y);
@@ -208,6 +197,83 @@ public class PlayerMovement : MonoBehaviour
 
     public void Movement3D()
     {
+        DashControl();
 
+        if (moving)
+        {
+            if (((wall != null && Mathf.Abs(transform.position.x + input.x - wall.position.x) > Mathf.Abs(transform.position.x - wall.position.x)) || wall == null) && control >= controlThreshold)
+            {
+                rb.AddForce((transform.right * input.x + transform.forward * input.y).normalized * speed * control);
+                if (!dashing)
+                {
+                    if (input.x != 0 && input.y != 0)
+                    {
+                        Debug.Log("1");
+                        rb.velocity = new(Mathf.Clamp(rb.velocity.x, -sRootSpeedCap, sRootSpeedCap), rb.velocity.y, Mathf.Clamp(rb.velocity.z, -sRootSpeedCap, sRootSpeedCap));
+                    }
+                    else
+                    {
+                        Debug.Log("2");
+                        rb.velocity = new(Mathf.Clamp(rb.velocity.x, -speedCap, speedCap), rb.velocity.y, Mathf.Clamp(rb.velocity.z, -speedCap, speedCap));
+                    }
+                }
+            }
+        }
+    }
+
+    public void DashControl()
+    {
+        RaycastHit hit;
+        bool onWall = Physics.Raycast(transform.position, dashDirection, out hit) && (hit.collider.transform == wall || hit.collider.transform == ground);
+        if (onWall)
+        {
+            dashInput = false;
+            return;
+        }
+
+        if (dashInput && !grounded && canDash) Dash();
+        else if (grounded && dashInput && canDash && dashDirection != Vector3.zero) Dash();
+        if (dashing && rb.velocity.magnitude > 0.01f)
+        {
+            if (dimension == Dimension.Two)
+            {
+                if (dashDirection.y > 0)
+                {
+                    rb.velocity -= dashDirection * (dashForce / dashCancelTime) * Time.fixedDeltaTime;
+                }
+                else
+                {
+                    rb.velocity -= Vector3.right * dashDirection.x * (dashForce / dashCancelTime) * Time.fixedDeltaTime;
+                }
+            }
+            else
+            {
+                rb.velocity -= dashDirection * (dashForce / dashCancelTime) * Time.fixedDeltaTime;
+            }
+            control += Time.fixedDeltaTime / dashCancelTime;
+        }
+        else if (dashing && rb.velocity.magnitude <= 0.1f)
+        {
+            StopCoroutine("DashDelay");
+            StopDash();
+        }
+    }
+
+    public void StopDash()
+    {
+        if (dimension == Dimension.Two)
+        {
+            if (dashDirection.y > 0)
+            {
+                rb.velocity = Vector3.zero;
+            }
+            else
+            {
+                rb.velocity = new(0, rb.velocity.y);
+            }
+        }
+        else rb.velocity = Vector3.zero;
+        dashing = false;
+        control = 1;
     }
 }
