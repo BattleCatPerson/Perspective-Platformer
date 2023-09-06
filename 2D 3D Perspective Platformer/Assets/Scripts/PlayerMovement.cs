@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
     [SerializeField] Vector2 input;
+    [SerializeField] Vector2 rawInput;
 
     [Header("Horizontal Movement")]
     [SerializeField] bool moving;
@@ -43,6 +44,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Dimension dimension = Dimension.Two;
     [SerializeField] bool doubleJumped;
     [SerializeField] float doubleJumpForce;
+
+    [Header("Controller Adjustments")]
+    [SerializeField] float lower;
+    [SerializeField] float upper;
     void Start()
     {
         //dimension = Dimension.Two;
@@ -61,7 +66,8 @@ public class PlayerMovement : MonoBehaviour
 
     void OnMove(InputValue value)
     {
-        input = value.Get<Vector2>();
+        rawInput = value.Get<Vector2>();
+        input = SortValue(value.Get<Vector2>());
         moving = (dimension == Dimension.Two && input.x != 0) || (dimension == Dimension.Three && (input.magnitude > 0));
     }
 
@@ -171,9 +177,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void Dash()
     {
-
-        
-
         control = 0;
         rb.velocity = dashDirection * dashForce;
         StartCoroutine("DashDelay");
@@ -275,5 +278,38 @@ public class PlayerMovement : MonoBehaviour
         else rb.velocity = Vector3.zero;
         dashing = false;
         control = 1;
+    }
+
+    public Vector2 SortValue(Vector2 v)
+    {
+        float multX = v.x > 0 ? 1 : -1;
+        float multY = v.y > 0 ? 1 : -1;
+        if (Mathf.Abs(v.x) > Mathf.Abs(v.y))
+        {
+            if (v.y > 0)
+            {
+                if (v.y < lower) return Vector2.right * multX;
+                else return (new Vector2(multX, 1)).normalized;
+            }
+            else
+            {
+                if (v.y > -lower) return Vector2.right * multX;
+                else return (new Vector2(multX, -1)).normalized;
+            }
+        }
+        else if (Mathf.Abs(v.y) > Mathf.Abs(v.x))
+        {
+            if (v.x > 0)
+            {
+                if (v.x < lower) return Vector2.up * multY;
+                else return (new Vector2(1, multY)).normalized;
+            }
+            else
+            {
+                if (v.y > -lower) return Vector2.up * multY;
+                else return (new Vector2(-1, multY)).normalized;
+            }
+        }
+        return Vector2.zero;
     }
 }

@@ -294,6 +294,17 @@
                 },
                 {
                     "name": "",
+                    "id": "559c5276-e29e-4b26-a0a0-3c3e552f5c4b",
+                    "path": "<XInputController>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "1795b5ea-8fc0-4e70-9854-aa3cecc62d39",
                     "path": "<Keyboard>/q",
                     "interactions": "",
@@ -307,6 +318,17 @@
                     "name": "",
                     "id": "9eec575a-1861-479c-976c-ded6161b3e8b",
                     "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "afad2033-f759-481d-95dc-0367c9465ea7",
+                    "path": "<XInputController>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
