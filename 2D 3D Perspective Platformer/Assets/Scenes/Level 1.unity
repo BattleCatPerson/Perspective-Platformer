@@ -1061,16 +1061,6 @@ PrefabInstance:
       propertyPath: respawnPoint
       value: 
       objectReference: {fileID: 1972158877}
-    - target: {fileID: 6251606273162874953, guid: 38efc41ed27bda34bb2e36a15960e2d2,
-        type: 3}
-      propertyPath: lower
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6251606273162874953, guid: 38efc41ed27bda34bb2e36a15960e2d2,
-        type: 3}
-      propertyPath: upper
-      value: 0.7
-      objectReference: {fileID: 0}
     - target: {fileID: 6251606273162874963, guid: 38efc41ed27bda34bb2e36a15960e2d2,
         type: 3}
       propertyPath: m_Name

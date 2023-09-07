@@ -81,6 +81,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 6251606273162874952}
   input: {x: 0, y: 0}
+  rawInput: {x: 0, y: 0}
+  filteredInput: {x: 0, y: 0}
   moving: 0
   speed: 10
   speedCap: 3
@@ -101,6 +103,8 @@ MonoBehaviour:
   dimension: 0
   doubleJumped: 0
   doubleJumpForce: 10
+  yThreshold: 0.4
+  xThreshold: 0.2
 --- !u!114 &6251606273162874954
 MonoBehaviour:
   m_ObjectHideFlags: 0
