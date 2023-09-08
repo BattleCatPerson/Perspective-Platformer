@@ -47,6 +47,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float doubleJumpForce;
     [SerializeField] Transform camTransform;
     [SerializeField] Transform movementDirection;
+    [SerializeField] Vector3 dashCurrentDirection;
 
     [Header("Controller Adjustments")]
     [SerializeField, Range(0, 1)] float yThreshold;
@@ -83,7 +84,7 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
             grounded = false;
         }
-        else if (!doubleJumped && dimension == Dimension.Three)
+        else if (!doubleJumped && dimension == Dimension.Three && !dashing)
         {
             rb.velocity = new(rb.velocity.x, 0, rb.velocity.z);
             rb.AddForce(transform.up * doubleJumpForce, ForceMode.Impulse);
@@ -93,7 +94,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnDash()
     {
-        dashDirection = dimension == Dimension.Two ? new Vector3(filteredInput.x, filteredInput.y).normalized : new Vector3(filteredInput.x, 0, filteredInput.y);
+        dashDirection = new Vector3(filteredInput.x, filteredInput.y).normalized;
         if (canDash && dashDirection != Vector3.zero) dashInput = true;
     }
     private void OnCollisionEnter(Collision collision)
@@ -184,7 +185,12 @@ public class PlayerMovement : MonoBehaviour
     {
         control = 0;
         if (dimension == Dimension.Two) rb.velocity = dashDirection * dashForce;
-        else rb.velocity = (movementDirection.forward * dashDirection.y + movementDirection.right * dashDirection.x) * dashForce; //fix this
+        else
+        {
+            Debug.Log((movementDirection.forward * dashDirection.y + movementDirection.right * dashDirection.x).normalized);
+            rb.velocity = (movementDirection.forward * dashDirection.y + movementDirection.right * dashDirection.x).normalized * dashForce; //fix this
+            dashCurrentDirection = (movementDirection.forward * dashDirection.y + movementDirection.right * dashDirection.x).normalized;
+        }
         StartCoroutine("DashDelay");
         canDash = false;
         dashInput = false;
@@ -210,7 +216,14 @@ public class PlayerMovement : MonoBehaviour
         movementDirection.eulerAngles = new(0, camTransform.eulerAngles.y);
         if (moving)
         {
-            if (((wall != null && Mathf.Abs(transform.position.x + input.x - wall.position.x) > Mathf.Abs(transform.position.x - wall.position.x)) || wall == null) && control >= controlThreshold)
+            bool intoWall = false;
+            if (wall)
+            {
+                intoWall = Vector3.Distance(transform.position, wall.position)
+                > Vector3.Distance(transform.position + movementDirection.forward * input.y + movementDirection.right * input.x, wall.position);
+            }
+            
+            if (((wall != null && !intoWall || wall == null) && control >= controlThreshold))
             {
                 rb.AddForce((movementDirection.right * input.x + movementDirection.forward * input.y).normalized * speed * control);
                 if (!dashing)
@@ -233,15 +246,17 @@ public class PlayerMovement : MonoBehaviour
     public void DashControl()
     {
         RaycastHit hit;
-        bool onWall = Physics.Raycast(transform.position, dashDirection, out hit) && (hit.collider.transform == wall || hit.collider.transform == ground);
+        bool onWall;
+        if (dimension == Dimension.Two) onWall = Physics.Raycast(transform.position, dashDirection, out hit) && (hit.collider.transform == wall || (hit.collider.transform == ground));
+        else onWall = Physics.Raycast(transform.position, new Vector3(dashDirection.x, 0, dashDirection.y), out hit) && (hit.collider.transform == wall || (hit.collider.transform == ground));
+
         if (onWall)
         {
             dashInput = false;
             return;
         }
+        if ((dashInput && !grounded && canDash) || (grounded && dashInput && canDash && dashDirection != Vector3.zero)) Dash();
 
-        if (dashInput && !grounded && canDash) Dash();
-        else if (grounded && dashInput && canDash && dashDirection != Vector3.zero) Dash();
         if (dashing && rb.velocity.magnitude > 0.01f)
         {
             if (dimension == Dimension.Two)
@@ -257,7 +272,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                rb.velocity -= dashDirection * (dashForce / dashCancelTime) * Time.fixedDeltaTime;
+                rb.velocity -= dashCurrentDirection * (dashForce / dashCancelTime) * Time.fixedDeltaTime;
             }
             control += Time.fixedDeltaTime / dashCancelTime;
         }
@@ -316,6 +331,7 @@ public class PlayerMovement : MonoBehaviour
                 else return (new Vector2(-1, multY)).normalized;
             }
         }
-        return Vector2.zero;
+
+        return new Vector2(v.x, v.y);
     }
 }
