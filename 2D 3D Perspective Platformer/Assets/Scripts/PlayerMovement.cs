@@ -187,7 +187,6 @@ public class PlayerMovement : MonoBehaviour
         if (dimension == Dimension.Two) rb.velocity = dashDirection * dashForce;
         else
         {
-            Debug.Log((movementDirection.forward * dashDirection.y + movementDirection.right * dashDirection.x).normalized);
             rb.velocity = (movementDirection.forward * dashDirection.y + movementDirection.right * dashDirection.x).normalized * dashForce; //fix this
             dashCurrentDirection = (movementDirection.forward * dashDirection.y + movementDirection.right * dashDirection.x).normalized;
         }
