@@ -212,7 +212,7 @@ public class PlayerMovement : MonoBehaviour
     public void Movement3D()
     {
         DashControl();
-        if (!moving) movementDirection.eulerAngles = new(0, camTransform.eulerAngles.y);
+        movementDirection.eulerAngles = new(0, camTransform.eulerAngles.y);
         if (moving)
         {
             bool intoWall = false;

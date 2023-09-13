@@ -25,14 +25,19 @@ public class PlayerDeath : MonoBehaviour
     {
         EnableDisableComponents(false);
         yield return new WaitForSeconds(respawnDelay);
-        transform.position = respawnPoint.position;
-        rb.velocity = Vector3.zero;
-        EnableDisableComponents(true);
+        Restart();
     }
 
     public void EnableDisableComponents(bool b)
     {
         GetComponent<Renderer>().enabled = b;
         rb.isKinematic = !b;
+    }
+
+    public void Restart()
+    {
+        transform.position = respawnPoint.position;
+        rb.velocity = Vector3.zero;
+        EnableDisableComponents(true);
     }
 }
