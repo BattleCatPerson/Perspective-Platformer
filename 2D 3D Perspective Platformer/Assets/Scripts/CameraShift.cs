@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.InputSystem;
 public class CameraShift : MonoBehaviour
 {
     [SerializeField] Camera camera;
@@ -15,6 +16,11 @@ public class CameraShift : MonoBehaviour
     [SerializeField] float ySpeed;
 
     [SerializeField] float setSpeedDelay;
+
+    [SerializeField] float quickRotateAmount;
+    [SerializeField] float quickRotateTime;
+    [SerializeField] bool quickRotating;
+    [SerializeField] float originalRotation;
     void Start()
     {
         xSpeed = freeLook.m_XAxis.m_MaxSpeed;
@@ -62,5 +68,11 @@ public class CameraShift : MonoBehaviour
         yield return new WaitForSeconds(setSpeedDelay);
         freeLook.m_XAxis.m_MaxSpeed = xSpeed;
         freeLook.m_YAxis.m_MaxSpeed = ySpeed;
+    }
+
+    void OnQuickRotateCamera(InputValue value)
+    {
+        float direction = value.Get<float>();
+        if (Mathf.Abs(direction) == 1) freeLook.m_XAxis.Value += direction * quickRotateAmount;
     }
 }

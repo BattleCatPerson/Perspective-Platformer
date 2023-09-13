@@ -69,10 +69,11 @@ public class PlayerMovement : MonoBehaviour
 
     void OnMove(InputValue value)
     {
-        rawInput = value.Get<Vector2>();
-        filteredInput = SortValue(rawInput);
-        if (dimension == Dimension.Two) input = (new Vector2(filteredInput.x, 0)).normalized;
-        else input = filteredInput;
+        input = value.Get<Vector2>();
+        //rawInput = value.Get<Vector2>();
+        //filteredInput = SortValue(rawInput);
+        //if (dimension == Dimension.Two) input = (new Vector2(filteredInput.x, 0)).normalized;
+        //else input = filteredInput;
         moving = (dimension == Dimension.Two && input.x != 0) || (dimension == Dimension.Three && (input.magnitude > 0));
     }
 
@@ -94,7 +95,9 @@ public class PlayerMovement : MonoBehaviour
 
     void OnDash()
     {
-        dashDirection = new Vector3(filteredInput.x, filteredInput.y).normalized;
+        dashDirection = new Vector3(input.x, input.y).normalized;
+
+        //dashDirection = new Vector3(filteredInput.x, filteredInput.y).normalized;
         if (canDash && dashDirection != Vector3.zero) dashInput = true;
     }
     private void OnCollisionEnter(Collision collision)
