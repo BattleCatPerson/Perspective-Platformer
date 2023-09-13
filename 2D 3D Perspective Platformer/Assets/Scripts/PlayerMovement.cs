@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -66,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
         if (control >= controlThreshold) rb.useGravity = true;
         if (dimension == Dimension.Two) Movement2D();
         else Movement3D();
+
     }
 
     void OnMove(InputValue value)
@@ -79,6 +78,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnJump()
     {
+        if (dashing) return;
         if (grounded)
         {
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -227,16 +227,8 @@ public class PlayerMovement : MonoBehaviour
                 rb.AddForce((movementDirection.right * input.x + movementDirection.forward * input.y).normalized * speed * control);
                 if (!dashing)
                 {
-                    if (input.x != 0 && input.y != 0)
-                    {
-                        Debug.Log("1");
-                        rb.velocity = new(Mathf.Clamp(rb.velocity.x, -sRootSpeedCap, sRootSpeedCap), rb.velocity.y, Mathf.Clamp(rb.velocity.z, -sRootSpeedCap, sRootSpeedCap));
-                    }
-                    else
-                    {
-                        Debug.Log("2");
-                        rb.velocity = new(Mathf.Clamp(rb.velocity.x, -speedCap, speedCap), rb.velocity.y, Mathf.Clamp(rb.velocity.z, -speedCap, speedCap));
-                    }
+                    Vector3 vel = Vector3.ClampMagnitude(new Vector3(rb.velocity.x, 0, rb.velocity.z), sRootSpeedCap);
+                    rb.velocity = new(vel.x, rb.velocity.y, vel.z);
                 }
             }
         }
@@ -332,5 +324,13 @@ public class PlayerMovement : MonoBehaviour
         }
 
         return new Vector2(v.x, v.y);
+    }
+
+    public void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + movementDirection.forward);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(transform.position, transform.position + movementDirection.forward * 5);
     }
 }
