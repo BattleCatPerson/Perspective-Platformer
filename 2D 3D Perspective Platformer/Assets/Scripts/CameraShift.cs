@@ -17,10 +17,13 @@ public class CameraShift : MonoBehaviour
 
     [SerializeField] float setSpeedDelay;
 
+    [Header("Quick Rotation")]
     [SerializeField] float quickRotateAmount;
     [SerializeField] float quickRotateTime;
+    [SerializeField] float currentQuickRotateTime;
     [SerializeField] bool quickRotating;
     [SerializeField] float originalRotation;
+    [SerializeField] float rotateDirection;
     void Start()
     {
         xSpeed = freeLook.m_XAxis.m_MaxSpeed;
@@ -30,10 +33,26 @@ public class CameraShift : MonoBehaviour
         else LockCamera3D();
     }
 
+    private void FixedUpdate()
+    {
+        if (quickRotating)
+        {
+            if (currentQuickRotateTime <= quickRotateTime)
+            {
+                freeLook.m_XAxis.Value = Mathf.Lerp(originalRotation, originalRotation + rotateDirection * quickRotateAmount, currentQuickRotateTime / quickRotateTime);
+                currentQuickRotateTime += Time.fixedDeltaTime;
+            }
+            else
+            {
+                freeLook.m_XAxis.Value = originalRotation + rotateDirection * quickRotateAmount;
+                quickRotating = false;
+                SetSpeeds(true);
+            }
+        }
+    }
     public void LockCamera2D()
     {
-        freeLook.m_YAxis.m_MaxSpeed = 0f;
-        freeLook.m_XAxis.m_MaxSpeed = 0f;
+        SetSpeeds(false);
 
         camera.orthographic = true;
         cinemachine2D.transform.position = camPosition2D;
@@ -66,13 +85,28 @@ public class CameraShift : MonoBehaviour
     public IEnumerator DelaySpeed()
     {
         yield return new WaitForSeconds(setSpeedDelay);
-        freeLook.m_XAxis.m_MaxSpeed = xSpeed;
-        freeLook.m_YAxis.m_MaxSpeed = ySpeed;
+        SetSpeeds(true);
     }
 
-    void OnQuickRotateCamera(InputValue value)
+    public void QuickRotate(float direction)
     {
-        float direction = value.Get<float>();
-        if (Mathf.Abs(direction) == 1) freeLook.m_XAxis.Value += direction * quickRotateAmount;
+        if (Mathf.Abs(direction) == 1)
+        {
+            rotateDirection = direction;
+            originalRotation = freeLook.m_XAxis.Value;
+            quickRotating = true;
+            currentQuickRotateTime = 0f;
+
+            SetSpeeds(false);
+        }
+    }
+
+    public void SetSpeeds(bool enabled)
+    {
+        float x = enabled ? xSpeed : 0;
+        float y = enabled ? ySpeed : 0;
+
+        freeLook.m_XAxis.m_MaxSpeed = x;
+        freeLook.m_YAxis.m_MaxSpeed = y;
     }
 }

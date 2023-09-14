@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Vector2 input;
     [SerializeField] Vector2 rawInput;
     [SerializeField] Vector2 filteredInput;
+    [SerializeField] Transform model;
 
     [Header("Horizontal Movement")]
     [SerializeField] bool moving;
@@ -50,6 +51,9 @@ public class PlayerMovement : MonoBehaviour
     [Header("Controller Adjustments")]
     [SerializeField, Range(0, 1)] float yThreshold;
     [SerializeField, Range(0, 1)] float xThreshold;
+
+    [Header("Camera")]
+    [SerializeField] CameraShift cameraShift;
     void Start()
     {
         //dimension = Dimension.Two;
@@ -228,6 +232,7 @@ public class PlayerMovement : MonoBehaviour
             if (((wall != null && !intoWall || wall == null) && control >= controlThreshold))
             {
                 rb.AddForce((movementDirection.right * input.x + movementDirection.forward * input.y).normalized * speed * control);
+                model.forward = (movementDirection.right * input.x + movementDirection.forward * input.y).normalized;
                 if (!dashing)
                 {
                     Vector3 vel = Vector3.ClampMagnitude(new Vector3(rb.velocity.x, 0, rb.velocity.z), sRootSpeedCap);
@@ -336,4 +341,6 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(transform.position, transform.position + movementDirection.forward * 5);
     }
+
+    void OnQuickRotateCamera(InputValue value) => cameraShift.QuickRotate(value.Get<float>());
 }
