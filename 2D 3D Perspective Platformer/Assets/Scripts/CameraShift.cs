@@ -90,6 +90,7 @@ public class CameraShift : MonoBehaviour
 
     public void QuickRotate(float direction)
     {
+        if (quickRotating) return;
         if (Mathf.Abs(direction) == 1)
         {
             rotateDirection = direction;
@@ -108,5 +109,11 @@ public class CameraShift : MonoBehaviour
 
         freeLook.m_XAxis.m_MaxSpeed = x;
         freeLook.m_YAxis.m_MaxSpeed = y;
+    }
+
+    public void LockCamera(Dimension d)
+    {
+        if (d == Dimension.Two) LockCamera2D();
+        else LockCamera3D();
     }
 }

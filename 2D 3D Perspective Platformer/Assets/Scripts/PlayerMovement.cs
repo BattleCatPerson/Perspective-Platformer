@@ -42,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("3D")]
     [SerializeField] Dimension dimension = Dimension.Two;
+    public void ChangeDimension(Dimension d) => dimension = d;
     [SerializeField] bool doubleJumped;
     [SerializeField] float doubleJumpForce;
     [SerializeField] Transform camTransform;

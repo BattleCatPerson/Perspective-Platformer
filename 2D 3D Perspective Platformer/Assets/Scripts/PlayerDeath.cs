@@ -30,7 +30,7 @@ public class PlayerDeath : MonoBehaviour
 
     public void EnableDisableComponents(bool b)
     {
-        GetComponent<Renderer>().enabled = b;
+        GetComponentInChildren<Renderer>().enabled = b;
         rb.isKinematic = !b;
     }
 
