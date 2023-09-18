@@ -53,12 +53,12 @@ public class CameraShift : MonoBehaviour
     public void LockCamera2D()
     {
         SetSpeeds(false);
-
-        camera.orthographic = true;
-        cinemachine2D.transform.position = camPosition2D;
-        cinemachine2D.transform.eulerAngles = Vector3.zero;
-
         SetPriority(2);
+
+        cinemachine2D.transform.position = cinemachine2D.transform.position;
+        cinemachine2D.transform.eulerAngles = Vector3.zero;
+        camera.orthographic = true;
+        
     }
 
     public void LockCamera3D()
