@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Vector2 rawInput;
     [SerializeField] Vector2 filteredInput;
     [SerializeField] Transform model;
-
+    [SerializeField] bool canMove;
     [Header("Horizontal Movement")]
     [SerializeField] bool moving;
     [SerializeField] float speed;
@@ -69,7 +69,6 @@ public class PlayerMovement : MonoBehaviour
         if (control >= controlThreshold) rb.useGravity = true;
         if (dimension == Dimension.Two) Movement2D();
         else Movement3D();
-
     }
 
     void OnMove(InputValue value)
@@ -344,4 +343,10 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void OnQuickRotateCamera(InputValue value) => cameraShift.QuickRotate(value.Get<float>());
+
+    public void DisableMovement(bool enabled)
+    {
+        rb.useGravity = enabled;
+        canMove = enabled;
+    }
 }
