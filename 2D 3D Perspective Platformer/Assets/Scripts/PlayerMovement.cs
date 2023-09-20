@@ -11,6 +11,8 @@ public enum Dimension
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
+    public static PlayerMovement instance;
+
     [SerializeField] Rigidbody rb;
     [SerializeField] Vector2 input;
     [SerializeField] Vector2 rawInput;
@@ -58,6 +60,11 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Launcher")]
     [SerializeField] bool launching;
+
+    private void Awake()
+    {
+        instance = this;
+    }
     void Start()
     {
         //dimension = Dimension.Two;
@@ -87,7 +94,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnJump()
     {
-        if (dashing || !canMove) return;
+        if (dashing || !canMove || jumpForce == 0) return;
         if (grounded)
         {
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -103,6 +110,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnDash()
     {
+        if (dashForce == 0) return;
         dashDirection = new Vector3(input.x, input.y).normalized;
 
         //dashDirection = new Vector3(filteredInput.x, filteredInput.y).normalized;
