@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class Launcher : MonoBehaviour
 {
+    public static Launcher currentLauncher;
+
     [SerializeField] float launchVelocity;
-    [SerializeField] Transform launchDirection;
+    [SerializeField] float rotateSpeed;
+    [SerializeField] Vector3 launchDirection;
     [SerializeField] PlayerMovement player;
     [SerializeField] bool launching;
     void Start()
@@ -13,8 +16,13 @@ public class Launcher : MonoBehaviour
         
     }
 
-    void Update()
+    void FixedUpdate()
     {
+        launchDirection = transform.forward;
+        if (launching)
+        {
+            transform.Rotate(transform.up * rotateSpeed * Time.fixedDeltaTime);
+        }
         //rotate the launchDirection transform
         //on input, launch in that direction
         //renable movement after hitting a wall/after a certain amount of time?
@@ -22,11 +30,21 @@ public class Launcher : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<PlayerMovement>(out PlayerMovement p))
+        if (other.transform.parent.TryGetComponent<PlayerMovement>(out PlayerMovement p))
         {
-            other.transform.position = transform.position;
             player = p;
+            p.DisableMovement(false);
+            other.transform.parent.position = transform.position;
             launching = true;
+            currentLauncher = this;
         }
+    }
+
+    public void Launch()
+    {
+        currentLauncher = null;
+        launching = false;
+        player.Launch(launchDirection, launchVelocity);
+        transform.eulerAngles = Vector3.zero;
     }
 }

@@ -55,18 +55,22 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField] CameraShift cameraShift;
+
+    [Header("Launcher")]
+    [SerializeField] bool launching;
     void Start()
     {
         //dimension = Dimension.Two;
         grounded = true;
         canDash = true;
         control = 1;
+        canMove = true;
         sRootSpeedCap = Mathf.Sqrt(Mathf.Pow(speedCap, 2) / 2);
     }
 
     void FixedUpdate()
     {
-        if (control >= controlThreshold) rb.useGravity = true;
+        if (!canMove) return;
         if (dimension == Dimension.Two) Movement2D();
         else Movement3D();
     }
@@ -83,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnJump()
     {
-        if (dashing) return;
+        if (dashing || !canMove) return;
         if (grounded)
         {
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -104,6 +108,10 @@ public class PlayerMovement : MonoBehaviour
         //dashDirection = new Vector3(filteredInput.x, filteredInput.y).normalized;
         if (canDash && dashDirection != Vector3.zero) dashInput = true;
     }
+    void OnLaunch()
+    {
+        if (Launcher.currentLauncher) Launcher.currentLauncher.Launch();
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
@@ -114,6 +122,11 @@ public class PlayerMovement : MonoBehaviour
                 StopDash();
             }
 
+            if (launching)
+            {
+                StopLaunch();
+                launching = false;
+            }
 
             RaycastHit hit;
             if (Physics.Raycast(transform.position, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
@@ -274,6 +287,7 @@ public class PlayerMovement : MonoBehaviour
                 rb.velocity -= dashCurrentDirection * (dashForce / dashCancelTime) * Time.fixedDeltaTime;
             }
             control += Time.fixedDeltaTime / dashCancelTime;
+            if (control >= controlThreshold) rb.useGravity = true;
         }
         else if (dashing && rb.velocity.magnitude <= 0.1f)
         {
@@ -298,6 +312,7 @@ public class PlayerMovement : MonoBehaviour
         else rb.velocity = Vector3.zero;
         dashing = false;
         control = 1;
+        rb.useGravity = true;
     }
 
     public Vector2 SortValue(Vector2 v)
@@ -348,5 +363,19 @@ public class PlayerMovement : MonoBehaviour
     {
         rb.useGravity = enabled;
         canMove = enabled;
+
+        if (!enabled) rb.velocity = Vector3.zero;
+    }
+
+    public void Launch(Vector3 direction, float velocity)
+    {
+        rb.velocity = direction * velocity;
+        launching = true;
+    }
+
+    public void StopLaunch()
+    {
+        rb.velocity = Vector3.zero;
+        DisableMovement(true);
     }
 }
