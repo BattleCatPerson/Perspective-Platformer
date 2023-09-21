@@ -12,41 +12,49 @@ public class LevelMarker : MonoBehaviour
         public string sceneName;
     }
 
+    [SerializeField] List<LevelMarker> markersInRange;
+
     [Header("Level Info")]
-    [SerializeField] LevelInfo levelInfo;
+    public LevelInfo levelInfo;
 
     [Header("Marker Rotation")]
     [SerializeField] Transform platformTransform;
     [SerializeField] float rotationSpeed;
 
-    
+
     [Header("Display Information")]
+    public float distance;
     [SerializeField] float maxDistance; //distance player needs to be from marker to display info
     [SerializeField] bool showInfo;
     [SerializeField] GameObject canvas;
+   
     void Start()
     {
-
+        Hide();
     }
 
     void FixedUpdate()
     {
+        markersInRange = LevelMarkerManager.markersInRange;
         platformTransform.Rotate(transform.up * rotationSpeed * Time.fixedDeltaTime);
 
-        if (!PlayerMovement.instance) return; 
-        if (Vector3.Distance(PlayerMovement.instance.transform.position, transform.position) <= maxDistance) Show();
-        else Hide();
+        if (!PlayerMovement.instance) return;
+        distance = Vector3.Distance(PlayerMovement.instance.transform.position, transform.position);
+        if (distance <= maxDistance && !markersInRange.Contains(this)) markersInRange.Add(this);
+        else if (distance > maxDistance && markersInRange.Contains(this))
+        {
+            markersInRange.Remove(this);
+            Hide();
+        }
     }
 
-    void Show()
+    public void Show()
     {
-        Debug.Log("SHWOING");
         canvas.SetActive(true);
     }
 
-    void Hide()
+    public void Hide()
     {
-        Debug.Log("HIDING");
         canvas.SetActive(false);
     }
 }

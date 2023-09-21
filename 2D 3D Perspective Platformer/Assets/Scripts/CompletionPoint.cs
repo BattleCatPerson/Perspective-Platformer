@@ -20,6 +20,6 @@ public class CompletionPoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("YOU WIN");
+        GameManager.onVictory?.Invoke();
     }
 }

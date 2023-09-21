@@ -365,7 +365,10 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + movementDirection.forward * 5);
     }
 
-    void OnQuickRotateCamera(InputValue value) => cameraShift.QuickRotate(value.Get<float>());
+    void OnQuickRotateCamera(InputValue value)
+    {
+        if (cameraShift) cameraShift.QuickRotate(value.Get<float>());
+    }
 
     public void DisableMovement(bool enabled)
     {

@@ -26,9 +26,6 @@ public class CameraShift : MonoBehaviour
     [SerializeField] float rotateDirection;
     void Start()
     {
-        xSpeed = freeLook.m_XAxis.m_MaxSpeed;
-        ySpeed = freeLook.m_YAxis.m_MaxSpeed;
-
         if (startDimension == Dimension.Two) LockCamera2D();
         else LockCamera3D();
     }
@@ -58,7 +55,6 @@ public class CameraShift : MonoBehaviour
         cinemachine2D.transform.position = cinemachine2D.transform.position;
         cinemachine2D.transform.eulerAngles = Vector3.zero;
         camera.orthographic = true;
-        
     }
 
     public void LockCamera3D()
