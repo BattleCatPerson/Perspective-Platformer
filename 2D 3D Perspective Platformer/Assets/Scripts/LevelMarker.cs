@@ -27,6 +27,7 @@ public class LevelMarker : MonoBehaviour
     [SerializeField] float maxDistance; //distance player needs to be from marker to display info
     [SerializeField] bool showInfo;
     [SerializeField] GameObject canvas;
+    public Vector3 spawnPositionOffset;
    
     void Start()
     {

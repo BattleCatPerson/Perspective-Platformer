@@ -6,9 +6,17 @@ using UnityEngine.SceneManagement;
 public class SelectStage : MonoBehaviour
 {
     [SerializeField] LevelMarker currentMarker;
+    private void Start()
+    {
+        transform.position = LevelMarkerManager.mapSpawnPosition;
+    }
     void OnJump()
     {
-        if (LevelMarkerManager.markersInRange.Count > 0) SceneManager.LoadScene(currentMarker.levelInfo.sceneName);
+        if (LevelMarkerManager.markersInRange.Count > 0)
+        {
+            SceneManager.LoadScene(currentMarker.levelInfo.sceneName);
+            LevelMarkerManager.mapSpawnPosition = currentMarker.transform.position + currentMarker.spawnPositionOffset;
+        }
     }
 
     private void Update()
