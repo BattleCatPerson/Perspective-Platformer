@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 public class SelectStage : MonoBehaviour
 {
     [SerializeField] LevelMarker currentMarker;
@@ -14,7 +13,7 @@ public class SelectStage : MonoBehaviour
     {
         if (LevelMarkerManager.markersInRange.Count > 0)
         {
-            SceneManager.LoadScene(currentMarker.levelInfo.sceneName);
+            GameManager.LoadScene(currentMarker.levelInfo.sceneName);
             LevelMarkerManager.mapSpawnPosition = currentMarker.transform.position + currentMarker.spawnPositionOffset;
         }
     }

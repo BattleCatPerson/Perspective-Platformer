@@ -18,11 +18,10 @@ public class GameManager : MonoBehaviour
         onShift = null;
         onVictory = null;
         currentGameManager = this;
-        onVictory += ReturnToMap;
     }
 
-    public void ReturnToMap()
+    public static void LoadScene(string scene)
     {
-        SceneManager.LoadScene(mapSceneName);
+        SceneManager.LoadScene(scene);
     }
 }

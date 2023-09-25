@@ -131,6 +131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointCollider: {fileID: 5247639412757506711}
   pointMesh: {fileID: 5247639412745112763}
+  mapName: Map
 --- !u!135 &5247639412757506711
 SphereCollider:
   m_ObjectHideFlags: 0

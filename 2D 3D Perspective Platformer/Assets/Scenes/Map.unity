@@ -1019,6 +1019,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8568847578865073932, guid: 88ad91b7698b8774aaefa3e045e9d640,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8568847578865073932, guid: 88ad91b7698b8774aaefa3e045e9d640,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 0cb062ea29f9d3143978de59868406d4,
+        type: 2}
+    - target: {fileID: 8568847578865073932, guid: 88ad91b7698b8774aaefa3e045e9d640,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8568847578865073932, guid: 88ad91b7698b8774aaefa3e045e9d640,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -7345018050881394252, guid: 0cb062ea29f9d3143978de59868406d4,
+        type: 2}
+    - target: {fileID: 8568847578865073932, guid: 88ad91b7698b8774aaefa3e045e9d640,
+        type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8568847579338117098, guid: 88ad91b7698b8774aaefa3e045e9d640,
         type: 3}
       propertyPath: m_Camera

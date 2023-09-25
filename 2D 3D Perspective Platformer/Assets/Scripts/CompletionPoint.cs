@@ -6,6 +6,7 @@ public class CompletionPoint : MonoBehaviour
 {
     [SerializeField] Collider pointCollider;
     [SerializeField] MeshRenderer pointMesh;
+    [SerializeField] string mapName;
     void Start()
     {
         GameManager.onShift += EnablePoint;
@@ -21,5 +22,6 @@ public class CompletionPoint : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         GameManager.onVictory?.Invoke();
+        GameManager.LoadScene(mapName);
     }
 }
