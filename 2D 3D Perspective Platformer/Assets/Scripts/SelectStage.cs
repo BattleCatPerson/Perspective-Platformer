@@ -11,6 +11,7 @@ public class SelectStage : MonoBehaviour
     }
     void OnJump()
     {
+        if (PauseMenu.paused) return;
         if (LevelMarkerManager.markersInRange.Count > 0)
         {
             GameManager.LoadScene(currentMarker.levelInfo.sceneName);
