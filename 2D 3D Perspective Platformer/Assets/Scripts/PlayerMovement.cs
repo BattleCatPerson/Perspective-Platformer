@@ -73,11 +73,13 @@ public class PlayerMovement : MonoBehaviour
         control = 1;
         canMove = true;
         sRootSpeedCap = Mathf.Sqrt(Mathf.Pow(speedCap, 2) / 2);
+
+        Cursor.visible = false;
     }
 
     void FixedUpdate()
     {
-        if (!canMove) return;
+        if (!canMove || PauseMenu.paused) return;
         if (dimension == Dimension.Two) Movement2D();
         else Movement3D();
     }

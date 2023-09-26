@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEditor;
 using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class GameManager : MonoBehaviour
     public static Action onVictory;
 
     public string mapSceneName;
+    public string sceneToQuit;
     private void Awake()
     {
         onShift = null;
@@ -23,5 +25,10 @@ public class GameManager : MonoBehaviour
     public static void LoadScene(string scene)
     {
         SceneManager.LoadScene(scene);
+    }
+
+    public static void Quit()
+    {
+        Application.Quit();
     }
 }
