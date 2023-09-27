@@ -7,12 +7,16 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager currentGameManager;
+    public static List<string> completedLevelNames;
+    public static int levelsCompleted = 0;
+
     public bool victory;
     public bool shifted;
 
     public static Action onShift;
     public static Action onVictory;
 
+    public string levelName;
     public string mapSceneName;
     public string sceneToQuit;
     private void Awake()
@@ -20,6 +24,8 @@ public class GameManager : MonoBehaviour
         onShift = null;
         onVictory = null;
         currentGameManager = this;
+
+        if (completedLevelNames == null) completedLevelNames = new();
     }
 
     public static void LoadScene(string scene)

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Cinemachine;
 public class Launcher : MonoBehaviour
 {
     public static Launcher currentLauncher;
@@ -11,17 +11,18 @@ public class Launcher : MonoBehaviour
     [SerializeField] Vector3 launchDirection;
     [SerializeField] PlayerMovement player;
     [SerializeField] bool launching;
+    [SerializeField] CinemachineVirtualCamera vcam; 
     void Start()
     {
-        
+        vcam.Priority = 0;
     }
 
     void FixedUpdate()
     {
-        launchDirection = transform.forward;
         if (launching)
         {
-            transform.Rotate(transform.up * rotateSpeed * Time.fixedDeltaTime);
+            launchDirection = player.transform.forward;
+            player.transform.Rotate(transform.up * rotateSpeed * Time.fixedDeltaTime);
         }
         //rotate the launchDirection transform
         //on input, launch in that direction
@@ -34,9 +35,11 @@ public class Launcher : MonoBehaviour
         {
             player = p;
             p.DisableMovement(false);
+            p.transform.eulerAngles = Vector3.zero;
             other.transform.parent.position = transform.position;
             launching = true;
             currentLauncher = this;
+            vcam.Priority = 12; // do something with the other active camera in order to make it more smooth
         }
     }
 
@@ -45,6 +48,6 @@ public class Launcher : MonoBehaviour
         currentLauncher = null;
         launching = false;
         player.Launch(launchDirection, launchVelocity);
-        transform.eulerAngles = Vector3.zero;
+        vcam.Priority = 0;
     }
 }

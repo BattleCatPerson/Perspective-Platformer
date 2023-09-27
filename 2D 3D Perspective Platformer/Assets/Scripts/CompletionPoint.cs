@@ -23,5 +23,13 @@ public class CompletionPoint : MonoBehaviour
     {
         GameManager.onVictory?.Invoke();
         GameManager.LoadScene(mapName);
+
+        string name = GameManager.currentGameManager.levelName;
+        List<string> names = GameManager.completedLevelNames;
+        if (!names.Contains(name))
+        {
+            GameManager.completedLevelNames.Add(GameManager.currentGameManager.levelName);
+            GameManager.levelsCompleted++;
+        }
     }
 }
