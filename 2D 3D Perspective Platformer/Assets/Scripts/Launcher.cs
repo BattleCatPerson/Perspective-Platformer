@@ -21,8 +21,17 @@ public class Launcher : MonoBehaviour
     {
         if (launching)
         {
-            launchDirection = player.transform.forward;
-            player.transform.Rotate(transform.up * rotateSpeed * Time.fixedDeltaTime);
+            if (PlayerMovement.instance.Dimension == Dimension.Two)
+            {
+                launchDirection = player.transform.right;
+                player.transform.Rotate(transform.forward * rotateSpeed * Time.fixedDeltaTime);
+            }
+            else
+            {
+                launchDirection = player.transform.forward;
+                player.transform.Rotate(transform.up * rotateSpeed * Time.fixedDeltaTime);
+            }
+            
         }
         //rotate the launchDirection transform
         //on input, launch in that direction
@@ -39,7 +48,15 @@ public class Launcher : MonoBehaviour
             other.transform.parent.position = transform.position;
             launching = true;
             currentLauncher = this;
-            vcam.Priority = 12; // do something with the other active camera in order to make it more smooth
+            
+            if (p.Dimension == Dimension.Three) vcam.Priority = 12; // do something with the other active camera in order to make it more smooth
+
+            var obj = CameraShift.instance.currentCamera;
+            if (obj.TryGetComponent<CinemachineFreeLook>(out CinemachineFreeLook c))
+            {
+                c.LookAt = null;
+                c.Follow = null;
+            }
         }
     }
 
@@ -49,5 +66,12 @@ public class Launcher : MonoBehaviour
         launching = false;
         player.Launch(launchDirection, launchVelocity);
         vcam.Priority = 0;
+
+        var obj = CameraShift.instance.currentCamera;
+        if (obj.TryGetComponent<CinemachineFreeLook>(out CinemachineFreeLook c))
+        {
+            c.LookAt = PlayerMovement.instance.transform;
+            c.Follow = PlayerMovement.instance.transform;
+        }
     }
 }

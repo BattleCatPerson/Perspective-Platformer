@@ -44,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("3D")]
     [SerializeField] Dimension dimension = Dimension.Two;
+    public Dimension Dimension { get { return dimension; } }
     public void ChangeDimension(Dimension d) => dimension = d;
     [SerializeField] bool doubleJumped;
     [SerializeField] float doubleJumpForce;
@@ -377,7 +378,11 @@ public class PlayerMovement : MonoBehaviour
         rb.useGravity = enabled;
         canMove = enabled;
 
-        if (!enabled) rb.velocity = Vector3.zero;
+        if (!enabled)
+        {
+            rb.velocity = Vector3.zero;
+            model.localEulerAngles = Vector3.zero;
+        }
     }
 
     public void Launch(Vector3 direction, float velocity)

@@ -5,6 +5,7 @@ using Cinemachine;
 using UnityEngine.InputSystem;
 public class CameraShift : MonoBehaviour
 {
+    public static CameraShift instance;
     [SerializeField] Camera camera;
     [SerializeField] CinemachineVirtualCamera cinemachine2D;
     [SerializeField] CinemachineFreeLook freeLook;
@@ -24,6 +25,12 @@ public class CameraShift : MonoBehaviour
     [SerializeField] bool quickRotating;
     [SerializeField] float originalRotation;
     [SerializeField] float rotateDirection;
+
+    public Transform currentCamera;
+    private void Awake()
+    {
+        instance = this;
+    }
     void Start()
     {
         if (startDimension == Dimension.Two) LockCamera2D();
@@ -55,6 +62,8 @@ public class CameraShift : MonoBehaviour
         cinemachine2D.transform.position = cinemachine2D.transform.position;
         cinemachine2D.transform.eulerAngles = Vector3.zero;
         camera.orthographic = true;
+
+        currentCamera = cinemachine2D.transform;
     }
 
     public void LockCamera3D()
@@ -62,6 +71,7 @@ public class CameraShift : MonoBehaviour
         SetPriority(3);
         camera.orthographic = false;
         StartCoroutine(DelaySpeed());
+        currentCamera = freeLook.transform;
     }
 
     public void SetPriority(int dimension)
