@@ -4,21 +4,7 @@ using UnityEngine;
 
 public class CompletionPoint : MonoBehaviour
 {
-    [SerializeField] Collider pointCollider;
-    [SerializeField] MeshRenderer pointMesh;
     [SerializeField] string mapName;
-    void Start()
-    {
-        GameManager.onShift += EnablePoint;
-        pointCollider.enabled = false;
-        pointMesh.enabled = false;
-    }
-    public void EnablePoint()
-    {
-        pointCollider.enabled = true;
-        pointMesh.enabled = true;
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         GameManager.onVictory?.Invoke();

@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     public string levelName;
     public string mapSceneName;
     public string sceneToQuit;
+
+    
     private void Awake()
     {
         onShift = null;
@@ -37,4 +39,6 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
     }
+
+    
 }

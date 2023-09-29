@@ -10,6 +10,7 @@ public class Launcher : MonoBehaviour
     [SerializeField] float rotateSpeed;
     [SerializeField] Vector3 launchDirection;
     [SerializeField] PlayerMovement player;
+    [SerializeField] Transform model;
     [SerializeField] bool launching;
     [SerializeField] CinemachineVirtualCamera vcam; 
     void Start()
@@ -23,13 +24,13 @@ public class Launcher : MonoBehaviour
         {
             if (PlayerMovement.instance.Dimension == Dimension.Two)
             {
-                launchDirection = player.transform.right;
-                player.transform.Rotate(transform.forward * rotateSpeed * Time.fixedDeltaTime);
+                launchDirection = model.transform.right;
+                model.Rotate(transform.forward * rotateSpeed * Time.fixedDeltaTime);
             }
             else
             {
-                launchDirection = player.transform.forward;
-                player.transform.Rotate(transform.up * rotateSpeed * Time.fixedDeltaTime);
+                launchDirection = model.transform.forward;
+                model.Rotate(transform.up * rotateSpeed * Time.fixedDeltaTime);
             }
             
         }
@@ -43,13 +44,14 @@ public class Launcher : MonoBehaviour
         if (other.transform.parent.TryGetComponent<PlayerMovement>(out PlayerMovement p))
         {
             player = p;
+            model = p.Model;
             p.DisableMovement(false);
-            p.transform.eulerAngles = Vector3.zero;
+            model.localEulerAngles = new(model.localEulerAngles.x, model.localEulerAngles.y, 0);
             other.transform.parent.position = transform.position;
             launching = true;
             currentLauncher = this;
             
-            if (p.Dimension == Dimension.Three) vcam.Priority = 12; // do something with the other active camera in order to make it more smooth
+            if (p.Dimension == Dimension.Three) vcam.Priority = 12;
 
             var obj = CameraShift.instance.currentCamera;
             if (obj.TryGetComponent<CinemachineFreeLook>(out CinemachineFreeLook c))

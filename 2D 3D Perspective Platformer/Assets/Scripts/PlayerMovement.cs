@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Vector2 rawInput;
     [SerializeField] Vector2 filteredInput;
     [SerializeField] Transform model;
+    public Transform Model => model;
     [SerializeField] bool canMove;
     [Header("Horizontal Movement")]
     [SerializeField] bool moving;
@@ -44,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("3D")]
     [SerializeField] Dimension dimension = Dimension.Two;
-    public Dimension Dimension { get { return dimension; } }
+    public Dimension Dimension => dimension;
     public void ChangeDimension(Dimension d) => dimension = d;
     [SerializeField] bool doubleJumped;
     [SerializeField] float doubleJumpForce;
@@ -381,7 +382,6 @@ public class PlayerMovement : MonoBehaviour
         if (!enabled)
         {
             rb.velocity = Vector3.zero;
-            model.localEulerAngles = Vector3.zero;
         }
     }
 
