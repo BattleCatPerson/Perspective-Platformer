@@ -9,10 +9,14 @@ public class FaceDirection : MonoBehaviour
 
     [SerializeField] float finalZ;
     [SerializeField] Vector3 finalEulerAngles;
+
+    [SerializeField] PlayerMovement player;
     void Start()
     {
+        player = GetComponentInParent<PlayerMovement>();
         GameManager.onShift += SetFinal;
-        SetIntial();        
+        if (player.Dimension == Dimension.Two) SetIntial();
+        else SetFinal();
     }
     public void SetIntial()
     {

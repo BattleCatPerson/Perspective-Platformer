@@ -137,7 +137,6 @@ public class PlayerMovement : MonoBehaviour
             if (launching)
             {
                 StopLaunch();
-                launching = false;
             }
 
             RaycastHit hit;
@@ -162,7 +161,7 @@ public class PlayerMovement : MonoBehaviour
                     }
                 }
             }
-
+            //WALLS: DEBUG FOR LAUNCHING FROM THE LAUNCHER
             if (Physics.Raycast(transform.position, transform.right, out hit) || Physics.Raycast(transform.position, -transform.right, out hit) && hit.collider.gameObject == collision.gameObject) wall = collision.transform;
         }
     }
@@ -175,6 +174,10 @@ public class PlayerMovement : MonoBehaviour
             RaycastHit hit;
 
             if (dashing) return;
+            if (launching)
+            {
+                StopLaunch();
+            }
             if (Physics.Raycast(transform.position, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
             {
                 canDash = true;
@@ -393,7 +396,16 @@ public class PlayerMovement : MonoBehaviour
 
     public void StopLaunch()
     {
+        launching = false;
         rb.velocity = Vector3.zero;
         DisableMovement(true);
+        model.localEulerAngles = Vector3.zero;
+
+        //make sure wall is not set 
+        RaycastHit hit;
+        if (wall && Physics.Raycast(transform.position, transform.right, out hit) 
+            || Physics.Raycast(transform.position, -transform.right, out hit)
+            && hit.collider.gameObject == wall.gameObject) return;
+        wall = null;
     }
 }
