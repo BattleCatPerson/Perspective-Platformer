@@ -65,7 +65,7 @@ public class Launcher : MonoBehaviour
             other.transform.parent.position = transform.position;
             launching = true;
             currentLauncher = this;
-            
+            //make sure that gravit is not enabled again if you are in the launcher
             if (p.Dimension == Dimension.Three) vcam.Priority = 12;
 
             var obj = CameraShift.instance.currentCamera;

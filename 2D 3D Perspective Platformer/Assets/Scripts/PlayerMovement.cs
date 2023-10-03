@@ -33,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Jumping")]
     [SerializeField] float jumpForce;
     [SerializeField] bool grounded;
+    [SerializeField] bool jumpInput;
 
     [Header("Charged Directional Dash")]
     [SerializeField] Vector3 dashDirection;
@@ -98,7 +99,12 @@ public class PlayerMovement : MonoBehaviour
 
     void OnJump()
     {
-        if (dashing || !canMove || jumpForce == 0) return;
+        if (dashing || !canMove || jumpForce == 0 || dashInput) return;
+        jumpInput = true;
+    }
+
+    public void Jump()
+    {
         if (grounded)
         {
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -110,6 +116,8 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(transform.up * doubleJumpForce, ForceMode.Impulse);
             doubleJumped = true;
         }
+
+        jumpInput = false;
     }
 
     void OnDash()
@@ -162,7 +170,11 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
             //WALLS: DEBUG FOR LAUNCHING FROM THE LAUNCHER
-            if (Physics.Raycast(transform.position, transform.right, out hit) || Physics.Raycast(transform.position, -transform.right, out hit) && hit.collider.gameObject == collision.gameObject) wall = collision.transform;
+            if ((Physics.Raycast(transform.position, transform.right, out hit) || Physics.Raycast(transform.position, -transform.right, out hit)) && hit.collider.gameObject == collision.gameObject)
+            {
+                Debug.Log(transform.right);
+                wall = collision.transform;
+            }
         }
     }
 
@@ -174,10 +186,10 @@ public class PlayerMovement : MonoBehaviour
             RaycastHit hit;
 
             if (dashing) return;
-            if (launching)
-            {
-                StopLaunch();
-            }
+            //if (launching)
+            //{
+            //    StopLaunch();
+            //}
             if (Physics.Raycast(transform.position, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
             {
                 canDash = true;
@@ -232,8 +244,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Movement2D()
     {
-        DashControl();
-
+        JumpAndDash();
         if (moving)
         {
             if (((wall != null && Mathf.Abs(transform.position.x + input.x - wall.position.x) > Mathf.Abs(transform.position.x - wall.position.x)) || wall == null) && control >= controlThreshold)
@@ -246,7 +257,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Movement3D()
     {
-        DashControl();
+        JumpAndDash();
         movementDirection.eulerAngles = new(0, camTransform.eulerAngles.y);
         if (moving)
         {
@@ -268,6 +279,14 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+    }
+    public void JumpAndDash()
+    {
+        if ((jumpInput && dashInput) || (jumpInput && !dashInput)) Jump();
+        else DashControl();
+
+        jumpInput = false;
+        dashInput = false;
     }
 
     public void DashControl()
@@ -402,10 +421,10 @@ public class PlayerMovement : MonoBehaviour
         model.localEulerAngles = Vector3.zero;
 
         //make sure wall is not set 
-        RaycastHit hit;
-        if (wall && Physics.Raycast(transform.position, transform.right, out hit) 
-            || Physics.Raycast(transform.position, -transform.right, out hit)
-            && hit.collider.gameObject == wall.gameObject) return;
-        wall = null;
+        //RaycastHit hit;
+        //if (wall && Physics.Raycast(transform.position, transform.right, out hit) 
+        //    || Physics.Raycast(transform.position, -transform.right, out hit)
+        //    && hit.collider.gameObject == wall.gameObject) return;
+        //wall = null;
     }
 }
