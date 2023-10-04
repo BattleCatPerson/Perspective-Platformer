@@ -60,6 +60,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField] CameraShift cameraShift;
+    public CameraShift CameraShift => cameraShift;
 
     [Header("Launcher")]
     [SerializeField] bool launching;
@@ -224,7 +225,6 @@ public class PlayerMovement : MonoBehaviour
         rb.useGravity = false;
         dashing = true;
         yield return new WaitForSeconds(dashCancelTime);
-        rb.useGravity = true;
         StopDash();
     }
 
@@ -267,7 +267,7 @@ public class PlayerMovement : MonoBehaviour
                 intoWall = Vector3.Distance(transform.position, wall.position)
                 > Vector3.Distance(transform.position + movementDirection.forward * input.y + movementDirection.right * input.x, wall.position);
             }
-            
+
             if (((wall != null && !intoWall || wall == null) && control >= controlThreshold))
             {
                 rb.AddForce((movementDirection.right * input.x + movementDirection.forward * input.y).normalized * speed * control);
@@ -346,7 +346,10 @@ public class PlayerMovement : MonoBehaviour
         else rb.velocity = Vector3.zero;
         dashing = false;
         control = 1;
-        rb.useGravity = true;
+        if (canMove)
+        {
+            rb.useGravity = true;
+        }
     }
 
     public Vector2 SortValue(Vector2 v)
@@ -400,9 +403,9 @@ public class PlayerMovement : MonoBehaviour
     {
         rb.useGravity = enabled;
         canMove = enabled;
-
         if (!enabled)
         {
+            StopDash();
             rb.velocity = Vector3.zero;
         }
     }

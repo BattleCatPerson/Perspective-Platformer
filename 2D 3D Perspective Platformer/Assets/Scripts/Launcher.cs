@@ -21,6 +21,8 @@ public class Launcher : MonoBehaviour
     void Start()
     {
         vcam.Priority = 0;
+        SetIndicator2D();
+        GameManager.onShift += SetIndicator3D;
     }
 
     void FixedUpdate()
@@ -32,18 +34,12 @@ public class Launcher : MonoBehaviour
             {
                 launchDirection = model.transform.right;
                 model.Rotate(transform.forward * rotateSpeed * Time.fixedDeltaTime);
-
-                indicator.localEulerAngles = Vector3.zero;
-                indicator.localPosition = Vector3.right;
                 indicatorPivot.transform.right = launchDirection;
             }
             else
             {
                 launchDirection = model.transform.forward;
                 model.Rotate(transform.up * rotateSpeed * Time.fixedDeltaTime);
-
-                indicator.localScale = new(1, 0.5f);
-                indicator.localPosition = Vector3.forward;
                 indicatorPivot.transform.forward = launchDirection;
             }
 
@@ -61,6 +57,8 @@ public class Launcher : MonoBehaviour
             player = p;
             model = p.Model;
             p.DisableMovement(false);
+            p.CameraShift.FreeLook.m_XAxis.Value = 0;
+
             model.localEulerAngles = new(model.localEulerAngles.x, model.localEulerAngles.y, 0);
             other.transform.parent.position = transform.position;
             launching = true;
@@ -90,5 +88,18 @@ public class Launcher : MonoBehaviour
             c.LookAt = PlayerMovement.instance.transform;
             c.Follow = PlayerMovement.instance.transform;
         }
+    }
+
+    public void SetIndicator2D()
+    {
+        indicator.localEulerAngles = Vector3.zero;
+        indicator.localPosition = Vector3.right;
+        indicator.transform.localScale = new(1, 0.5f);
+    }
+
+    public void SetIndicator3D()
+    {
+        indicator.localEulerAngles = new(90, 0, 90);
+        indicator.localPosition = Vector3.forward;
     }
 }

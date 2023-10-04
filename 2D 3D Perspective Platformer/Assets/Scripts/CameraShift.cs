@@ -6,9 +6,10 @@ using UnityEngine.InputSystem;
 public class CameraShift : MonoBehaviour
 {
     public static CameraShift instance;
-    [SerializeField] Camera camera;
+    [SerializeField] Camera cam;
     [SerializeField] CinemachineVirtualCamera cinemachine2D;
     [SerializeField] CinemachineFreeLook freeLook;
+    public CinemachineFreeLook FreeLook => freeLook;
 
     [SerializeField] Vector3 camPosition2D;
     [SerializeField] Dimension startDimension;
@@ -61,7 +62,7 @@ public class CameraShift : MonoBehaviour
 
         cinemachine2D.transform.position = cinemachine2D.transform.position;
         cinemachine2D.transform.eulerAngles = Vector3.zero;
-        camera.orthographic = true;
+        cam.orthographic = true;
 
         currentCamera = cinemachine2D.transform;
     }
@@ -69,7 +70,7 @@ public class CameraShift : MonoBehaviour
     public void LockCamera3D()
     {
         SetPriority(3);
-        camera.orthographic = false;
+        cam.orthographic = false;
         StartCoroutine(DelaySpeed());
         currentCamera = freeLook.transform;
     }
