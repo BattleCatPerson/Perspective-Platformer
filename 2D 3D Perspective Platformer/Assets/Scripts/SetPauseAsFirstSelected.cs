@@ -6,9 +6,15 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(EventSystem))]
 public class SetPauseAsFirstSelected : MonoBehaviour
 {
-    [SerializeField] EventSystem system;
-    private void Start()
-    { 
-        system.SetSelectedGameObject(PlayerMovement.instance.GetComponent<PauseMenu>().firstSelected);
+    public static SetPauseAsFirstSelected instance;
+    [SerializeField] EventSystem eventSystem;
+    private void Awake()
+    {
+        instance = this;
+        eventSystem = GetComponent<EventSystem>();
+    }
+    public void Select(GameObject selected)
+    {
+        eventSystem.SetSelectedGameObject(selected);
     }
 }

@@ -7,15 +7,22 @@ using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
-    public string sceneToQuit;
-    public static bool paused;
-    public GameObject canvas;
-    public GameObject firstSelected;
+    public static PauseMenu instance;
 
+    public string sceneToQuit;
+    
+    public string mapPauseScene;
+    public string levelPauseScene;
+
+    public static bool paused;
+
+    private void Awake()
+    {
+        instance = this;
+    }
     private void Start()
     {
         sceneToQuit = GameManager.currentGameManager.sceneToQuit;
-        canvas.SetActive(false);
         paused = false;
     }
     void OnPause()
@@ -39,13 +46,19 @@ public class PauseMenu : MonoBehaviour
     public void PauseGame()
     {
         Time.timeScale = 0f;
-        canvas.SetActive(true);
+        GameManager.LoadSceneAdditive(levelPauseScene);
         paused = true;
     }
     public void Resume()
     {
         Time.timeScale = 1f;
-        canvas.SetActive(false);
+        GameManager.UnloadScene(levelPauseScene);
         paused = false;
+    }
+    public void Restart()
+    {
+        Time.timeScale = 1f;
+        GameManager.UnloadScene(levelPauseScene);
+        GameManager.LoadScene();
     }
 }

@@ -29,12 +29,22 @@ public class GameManager : MonoBehaviour
 
         if (completedLevelNames == null) completedLevelNames = new();
     }
-
+    public static void LoadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
     public static void LoadScene(string scene)
     {
         SceneManager.LoadScene(scene);
     }
-
+    public static void UnloadScene(string scene)
+    {
+        SceneManager.UnloadSceneAsync(scene);
+    }
+    public static void LoadSceneAdditive(string scene)
+    {
+        SceneManager.LoadScene(scene, LoadSceneMode.Additive);
+    }
     public static void Quit()
     {
         Application.Quit();
