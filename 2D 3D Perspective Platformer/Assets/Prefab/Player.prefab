@@ -1261,7 +1261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneToQuit: 
-  mapPauseScene: 
+  mapPauseScene: Pause Menu Map
   levelPauseScene: Pause Menu In-Level
 --- !u!1 &9036414087855889242
 GameObject:

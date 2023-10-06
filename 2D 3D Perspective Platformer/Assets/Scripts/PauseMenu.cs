@@ -13,6 +13,7 @@ public class PauseMenu : MonoBehaviour
     
     public string mapPauseScene;
     public string levelPauseScene;
+    private string currentScene;
 
     public static bool paused;
 
@@ -24,6 +25,8 @@ public class PauseMenu : MonoBehaviour
     {
         sceneToQuit = GameManager.currentGameManager.sceneToQuit;
         paused = false;
+
+        currentScene = GameManager.onMap ? mapPauseScene : levelPauseScene;
     }
     void OnPause()
     {
@@ -46,19 +49,24 @@ public class PauseMenu : MonoBehaviour
     public void PauseGame()
     {
         Time.timeScale = 0f;
-        GameManager.LoadSceneAdditive(levelPauseScene);
+        GameManager.LoadSceneAdditive(currentScene);
         paused = true;
     }
     public void Resume()
     {
         Time.timeScale = 1f;
-        GameManager.UnloadScene(levelPauseScene);
+        GameManager.UnloadScene(currentScene);
         paused = false;
     }
     public void Restart()
     {
         Time.timeScale = 1f;
-        GameManager.UnloadScene(levelPauseScene);
+        GameManager.UnloadScene(currentScene);
         GameManager.LoadScene();
+    }
+
+    public void Unload()
+    {
+
     }
 }

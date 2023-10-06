@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
 
     public static Action onShift;
     public static Action onVictory;
+    public static bool onMap;
 
     public string levelName;
     public string mapSceneName;
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
         onShift = null;
         onVictory = null;
         currentGameManager = this;
+        onMap = SceneManager.GetActiveScene().name == mapSceneName;
 
         if (completedLevelNames == null) completedLevelNames = new();
     }
