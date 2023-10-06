@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1649238187569074054}
   - component: {fileID: 1649238187569074057}
   m_Layer: 0
-  m_Name: Dimension Shfiter
+  m_Name: Dimension Shifter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

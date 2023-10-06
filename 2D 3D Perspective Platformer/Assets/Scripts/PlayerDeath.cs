@@ -25,7 +25,7 @@ public class PlayerDeath : MonoBehaviour
     {
         EnableDisableComponents(false);
         yield return new WaitForSeconds(respawnDelay);
-        Restart();
+        GameManager.LoadScene();
     }
 
     public void EnableDisableComponents(bool b)

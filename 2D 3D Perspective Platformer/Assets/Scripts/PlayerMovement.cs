@@ -282,7 +282,7 @@ public class PlayerMovement : MonoBehaviour
     }
     public void JumpAndDash()
     {
-        if ((jumpInput && dashInput) || (jumpInput && !dashInput)) Jump();
+        if (((jumpInput && dashInput) || (jumpInput && !dashInput)) && ((dimension == Dimension.Two && grounded) || (dimension == Dimension.Three && !doubleJumped))) Jump();
         else DashControl();
 
         jumpInput = false;
