@@ -230,7 +230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f1bfea1bfb9fbd4eadc96343e1241e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launchVelocity: 50
+  launchVelocity: 10
   rotateSpeed: 90
   launchDirection: {x: 0, y: 0, z: 0}
   player: {fileID: 0}

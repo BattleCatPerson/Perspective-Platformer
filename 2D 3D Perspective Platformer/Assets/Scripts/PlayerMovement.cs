@@ -149,7 +149,9 @@ public class PlayerMovement : MonoBehaviour
             }
 
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
+            if (Physics.Raycast(transform.position, -transform.up, out hit)
+                && ((hit.collider.transform.parent && hit.collider.transform.parent.gameObject == collision.gameObject)
+                || (!hit.collider.transform.parent && hit.collider == collision.gameObject)))
             {
                 grounded = true;
                 doubleJumped = false;
@@ -161,7 +163,9 @@ public class PlayerMovement : MonoBehaviour
             {
                 for (int j = -1; j <= 1; j += 2)
                 {
-                    if (Physics.Raycast(transform.position + transform.right * transform.localScale.x / 2 * i + transform.forward * transform.localScale.z / 2 * j, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
+                    if (Physics.Raycast(transform.position + transform.right * transform.localScale.x / 2 * i + transform.forward * transform.localScale.z / 2 * j, -transform.up, out hit)
+                        && ((hit.collider.transform.parent && hit.collider.transform.parent.gameObject == collision.gameObject)
+                        || (!hit.collider.transform.parent && hit.collider == collision.gameObject)))
                     {
                         grounded = true;
                         doubleJumped = false;
