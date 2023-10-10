@@ -383,6 +383,11 @@ PrefabInstance:
       propertyPath: cameraShift
       value: 
       objectReference: {fileID: 1423084360}
+    - target: {fileID: 6251606273162874953, guid: 38efc41ed27bda34bb2e36a15960e2d2,
+        type: 3}
+      propertyPath: layerToIgnore
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 6251606273162874963, guid: 38efc41ed27bda34bb2e36a15960e2d2,
         type: 3}
       propertyPath: m_Name
@@ -989,11 +994,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: One Way Platform Down to Up (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 2636716180535571240, guid: ef1340246ec3f444580a413349be3a70,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2636716180535571243, guid: ef1340246ec3f444580a413349be3a70,
         type: 3}
@@ -1671,7 +1671,7 @@ PrefabInstance:
     - target: {fileID: 2636716180535571240, guid: ef1340246ec3f444580a413349be3a70,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2636716180535571243, guid: ef1340246ec3f444580a413349be3a70,
         type: 3}
