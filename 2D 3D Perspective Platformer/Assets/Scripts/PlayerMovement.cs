@@ -123,7 +123,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnDash()
     {
-        if (dashForce == 0) return;
+        if (dashForce == 0 || !canMove) return;
         dashDirection = new Vector3(input.x, input.y).normalized;
 
         //dashDirection = new Vector3(filteredInput.x, filteredInput.y).normalized;
@@ -135,12 +135,16 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
+        RaycastHit hit;
         if (collision.gameObject.CompareTag("Ground"))
         {
             if (dashing)
             {
-                StopCoroutine("DashDelay");
-                StopDash();
+                if (Physics.Raycast(transform.position, dashDirection, out hit) && hit.collider == collision.collider)
+                {
+                    StopCoroutine("DashDelay");
+                    StopDash();
+                }
             }
 
             if (launching)
@@ -148,30 +152,8 @@ public class PlayerMovement : MonoBehaviour
                 StopLaunch();
             }
 
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position, -transform.up, out hit)
-                && (hit.collider.gameObject == collision.gameObject))
-            {
-                grounded = true;
-                doubleJumped = false;
-                ground = hit.collider.transform;
-                canDash = true;
-                return;
-            }
-            for (int i = -1; i <= 1; i += 2)
-            {
-                for (int j = -1; j <= 1; j += 2)
-                {
-                    if (Physics.Raycast(transform.position + transform.right * transform.localScale.x / 2 * i + transform.forward * transform.localScale.z / 2 * j, -transform.up, out hit)
-                        && hit.collider.gameObject == collision.gameObject)
-                    {
-                        grounded = true;
-                        doubleJumped = false;
-                        canDash = true;
-                        return;
-                    }
-                }
-            }
+            CheckGround(collision.gameObject);
+
             //WALLS: DEBUG FOR LAUNCHING FROM THE LAUNCHER
             if ((Physics.Raycast(transform.position, transform.right, out hit) || Physics.Raycast(transform.position, -transform.right, out hit)) && hit.collider.gameObject == collision.gameObject)
             {
@@ -193,22 +175,24 @@ public class PlayerMovement : MonoBehaviour
             //{
             //    StopLaunch();
             //}
-            if (Physics.Raycast(transform.position, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
-            {
-                canDash = true;
-                return;
-            }
-            for (int i = -1; i <= 1; i += 2)
-            {
-                for (int j = -1; j <= 1; j += 2)
-                {
-                    if (Physics.Raycast(transform.position + transform.right * transform.localScale.x / 2 * i + transform.forward * transform.localScale.z / 2 * j, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
-                    {
-                        canDash = true;
-                        return;
-                    }
-                }
-            }
+            CheckGround(collision.gameObject);
+            //if (Physics.Raycast(transform.position, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
+            //{
+            //    canDash = true;
+            //    grounded = true;
+            //    return;
+            //}
+            //for (int i = -1; i <= 1; i += 2)
+            //{
+            //    for (int j = -1; j <= 1; j += 2)
+            //    {
+            //        if (Physics.Raycast(transform.position + transform.right * transform.localScale.x / 2 * i + transform.forward * transform.localScale.z / 2 * j, -transform.up, out hit) && hit.collider.gameObject == collision.gameObject)
+            //        {
+            //            canDash = true;
+            //            return;
+            //        }
+            //    }
+            //}
 
         }
     }
@@ -431,5 +415,34 @@ public class PlayerMovement : MonoBehaviour
         //    || Physics.Raycast(transform.position, -transform.right, out hit)
         //    && hit.collider.gameObject == wall.gameObject) return;
         //wall = null;
+    }
+
+    public void CheckGround(GameObject g)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, -transform.up, out hit)
+                && (hit.collider.gameObject == g))
+        {
+            grounded = true;
+            doubleJumped = false;
+            ground = hit.collider.transform;
+            canDash = true;
+            return;
+        }
+        for (int i = -1; i <= 1; i += 2)
+        {
+            for (int j = -1; j <= 1; j += 2)
+            {
+                if (Physics.Raycast(transform.position + transform.right * transform.localScale.x / 2 * i + transform.forward * transform.localScale.z / 2 * j, -transform.up, out hit)
+                    && hit.collider.gameObject == g)
+                {
+                    grounded = true;
+                    doubleJumped = false;
+                    canDash = true;
+                    ground = hit.collider.transform;
+                    return;
+                }
+            }
+        }
     }
 }
