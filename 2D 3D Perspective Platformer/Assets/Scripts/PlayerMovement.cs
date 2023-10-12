@@ -140,11 +140,22 @@ public class PlayerMovement : MonoBehaviour
         {
             if (dashing)
             {
-                if (Physics.Raycast(transform.position, dashDirection, out hit) && hit.collider == collision.collider)
-                {
-                    StopCoroutine("DashDelay");
-                    StopDash();
-                }
+                //if (Physics.Raycast(transform.position, dashDirection, out hit) && hit.collider == collision.collider)
+                //{
+                StopCoroutine("DashDelay");
+                StopDash();
+                //}
+
+                //for (int i = -1; i <= 1; i += 2)
+                //{
+                //    if (Physics.Raycast(transform.position + i * transform.up * transform.localScale.y / 2, dashDirection, out hit)
+                //        && hit.collider == collision.collider)
+                //    {
+                //        StopCoroutine("DashDelay");
+                //        StopDash();
+                //        break;
+                //    }
+                //}
             }
 
             if (launching)
@@ -268,7 +279,10 @@ public class PlayerMovement : MonoBehaviour
     }
     public void JumpAndDash()
     {
-        if (((jumpInput && dashInput) || (jumpInput && !dashInput)) && ((dimension == Dimension.Two && grounded) || (dimension == Dimension.Three && !doubleJumped))) Jump();
+        if (((jumpInput && dashInput) || (jumpInput && !dashInput)) && ((dimension == Dimension.Two && grounded) || (dimension == Dimension.Three && !doubleJumped)))
+        {
+            Jump();
+        }
         else DashControl();
 
         jumpInput = false;
@@ -369,6 +383,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
+
         return new Vector2(v.x, v.y);
     }
 
@@ -378,6 +393,9 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + movementDirection.forward);
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(transform.position, transform.position + movementDirection.forward * 5);
+
+        Gizmos.DrawRay(transform.position + Vector3.up * 0.5f, new(1, 1));
+        Gizmos.DrawRay(transform.position + Vector3.up * -0.5f, new(1, 1));
     }
 
     void OnQuickRotateCamera(InputValue value)
