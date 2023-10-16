@@ -12,6 +12,7 @@ public class Launcher : MonoBehaviour
     [SerializeField] Vector3 launchDirection;
     [SerializeField] Transform launcherModel;
     [SerializeField] bool verticalOrHorizontal;
+    [SerializeField] Transform directionTransform;
     [Header("Player")]
     [SerializeField] PlayerMovement player;
     [SerializeField] Transform model;
@@ -34,18 +35,18 @@ public class Launcher : MonoBehaviour
             indicator.gameObject.SetActive(true);
             if (verticalOrHorizontal)
             {
-                Debug.Log(transform.forward);
-                Debug.Log(launcherModel.forward);
+                model.Rotate(Vector3.forward * rotateSpeed * Time.fixedDeltaTime);
 
-                launchDirection = model.transform.right;
-                model.Rotate(transform.forward * rotateSpeed * Time.fixedDeltaTime);
-                indicatorPivot.transform.right = launchDirection;
+                launchDirection = model.right;
+                //model.forward = launchDirection;
+                if (player.Dimension == Dimension.Two) indicatorPivot.right = launchDirection;
+                else indicatorPivot.forward = launchDirection;
             }
             else
             {
                 launchDirection = model.transform.forward;
                 model.Rotate(transform.up * rotateSpeed * Time.fixedDeltaTime);
-                indicatorPivot.transform.forward = launchDirection;
+                indicatorPivot.forward = launchDirection;
             }
 
         }
@@ -61,11 +62,15 @@ public class Launcher : MonoBehaviour
         {
             player = p;
             p.transform.parent = transform;
+            p.transform.localEulerAngles = Vector3.zero;
+
             model = p.Model;
             p.DisableMovement(false);
             p.CameraShift.FreeLook.m_XAxis.Value = 0;
 
-            model.localEulerAngles = new(model.localEulerAngles.x, model.localEulerAngles.y, 0);
+            if (player.Dimension == Dimension.Two) model.localEulerAngles = new(model.localEulerAngles.x, model.localEulerAngles.y, 0);
+            else model.localEulerAngles = Vector3.zero;
+
             other.transform.parent.position = transform.position;
             launching = true;
             currentLauncher = this;

@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class FaceDirection : MonoBehaviour
 {
-    [SerializeField] float initialZ;
     [SerializeField] Vector3 initialEulerAngles;
 
-    [SerializeField] float finalZ;
     [SerializeField] Vector3 finalEulerAngles;
 
     [SerializeField] PlayerMovement player;
@@ -20,13 +18,16 @@ public class FaceDirection : MonoBehaviour
     }
     public void SetIntial()
     {
-        transform.localPosition = Vector3.forward * initialZ;
         transform.localEulerAngles = initialEulerAngles;
     }
 
     public void SetFinal()
     {
-        transform.localPosition = Vector3.forward * finalZ;
         transform.localEulerAngles = finalEulerAngles;
+    }
+
+    public void SetDegree(Vector3 angle)
+    {
+        transform.localEulerAngles = angle;
     }
 }
