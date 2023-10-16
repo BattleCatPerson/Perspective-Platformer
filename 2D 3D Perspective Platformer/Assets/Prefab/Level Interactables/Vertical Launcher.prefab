@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 602144981931411631}
   - component: {fileID: 602144981931411619}
   m_Layer: 0
-  m_Name: Launcher
+  m_Name: Vertical Launcher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -233,6 +233,7 @@ MonoBehaviour:
   launchVelocity: 10
   rotateSpeed: 90
   launchDirection: {x: 0, y: 0, z: 0}
+  verticalOrHorizontal: 1
   player: {fileID: 0}
   model: {fileID: 0}
   launching: 0

@@ -389,13 +389,13 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + movementDirection.forward);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, transform.position + movementDirection.forward * 5);
+        //Gizmos.color = Color.red;
+        //Gizmos.DrawLine(transform.position, transform.position + movementDirection.forward);
+        //Gizmos.color = Color.blue;
+        //Gizmos.DrawLine(transform.position, transform.position + movementDirection.forward * 5);
 
-        Gizmos.DrawRay(transform.position + Vector3.up * 0.5f, new(1, 1));
-        Gizmos.DrawRay(transform.position + Vector3.up * -0.5f, new(1, 1));
+        //Gizmos.DrawRay(transform.position + Vector3.up * 0.5f, new(1, 1));
+        //Gizmos.DrawRay(transform.position + Vector3.up * -0.5f, new(1, 1));
     }
 
     void OnQuickRotateCamera(InputValue value)

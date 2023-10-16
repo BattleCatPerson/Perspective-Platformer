@@ -10,6 +10,8 @@ public class Launcher : MonoBehaviour
     [SerializeField] float launchVelocity;
     [SerializeField] float rotateSpeed;
     [SerializeField] Vector3 launchDirection;
+    [SerializeField] Transform launcherModel;
+    [SerializeField] bool verticalOrHorizontal;
     [Header("Player")]
     [SerializeField] PlayerMovement player;
     [SerializeField] Transform model;
@@ -30,8 +32,11 @@ public class Launcher : MonoBehaviour
         if (launching)
         {
             indicator.gameObject.SetActive(true);
-            if (PlayerMovement.instance.Dimension == Dimension.Two)
+            if (verticalOrHorizontal)
             {
+                Debug.Log(transform.forward);
+                Debug.Log(launcherModel.forward);
+
                 launchDirection = model.transform.right;
                 model.Rotate(transform.forward * rotateSpeed * Time.fixedDeltaTime);
                 indicatorPivot.transform.right = launchDirection;
@@ -55,6 +60,7 @@ public class Launcher : MonoBehaviour
         if (other.transform.parent.TryGetComponent<PlayerMovement>(out PlayerMovement p))
         {
             player = p;
+            p.transform.parent = transform;
             model = p.Model;
             p.DisableMovement(false);
             p.CameraShift.FreeLook.m_XAxis.Value = 0;
@@ -77,6 +83,8 @@ public class Launcher : MonoBehaviour
 
     public void Launch()
     {
+        player.transform.parent = null;
+
         currentLauncher = null;
         launching = false;
         player.Launch(launchDirection, launchVelocity);
@@ -101,5 +109,10 @@ public class Launcher : MonoBehaviour
     {
         indicator.localEulerAngles = new(90, 0, 90);
         indicator.localPosition = Vector3.forward;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawRay(transform.position, launchDirection);
     }
 }
