@@ -10,9 +10,7 @@ public class Launcher : MonoBehaviour
     [SerializeField] float launchVelocity;
     [SerializeField] float rotateSpeed;
     [SerializeField] Vector3 launchDirection;
-    [SerializeField] Transform launcherModel;
     [SerializeField] bool verticalOrHorizontal;
-    [SerializeField] Transform directionTransform;
     [Header("Player")]
     [SerializeField] PlayerMovement player;
     [SerializeField] Transform model;
@@ -69,7 +67,12 @@ public class Launcher : MonoBehaviour
             p.CameraShift.FreeLook.m_XAxis.Value = 0;
 
             if (player.Dimension == Dimension.Two) model.localEulerAngles = new(model.localEulerAngles.x, model.localEulerAngles.y, 0);
-            else model.localEulerAngles = Vector3.zero;
+            else
+            {
+                model.localEulerAngles = Vector3.zero;
+                FaceDirection.instance.SetDegree(new(0, 90));
+            }
+
 
             other.transform.parent.position = transform.position;
             launching = true;
@@ -116,8 +119,4 @@ public class Launcher : MonoBehaviour
         indicator.localPosition = Vector3.forward;
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawRay(transform.position, launchDirection);
-    }
 }

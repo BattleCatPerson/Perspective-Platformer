@@ -94,6 +94,11 @@ public class CameraShift : MonoBehaviour
         yield return new WaitForSeconds(setSpeedDelay);
         SetSpeeds(true);
     }
+    public IEnumerator DelaySpeed(float t)
+    {
+        yield return new WaitForSeconds(t);
+        SetSpeeds(true);
+    }
 
     public void QuickRotate(float direction)
     {

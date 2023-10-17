@@ -131,7 +131,11 @@ public class PlayerMovement : MonoBehaviour
     }
     void OnLaunch()
     {
-        if (Launcher.currentLauncher) Launcher.currentLauncher.Launch();
+        if (Launcher.currentLauncher)
+        {
+            Launcher.currentLauncher.Launch();
+            StartCoroutine(cameraShift.DelaySpeed(2f));
+        }
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -427,6 +431,7 @@ public class PlayerMovement : MonoBehaviour
         DisableMovement(true);
         model.localEulerAngles = Vector3.zero;
 
+        if (dimension == Dimension.Three) FaceDirection.instance.SetFinal(); 
         //make sure wall is not set 
         //RaycastHit hit;
         //if (wall && Physics.Raycast(transform.position, transform.right, out hit) 

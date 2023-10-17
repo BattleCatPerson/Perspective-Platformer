@@ -314,6 +314,7 @@ MonoBehaviour:
   launchVelocity: 10
   rotateSpeed: 90
   launchDirection: {x: 0, y: 0, z: 0}
+  launcherModel: {fileID: 6247964857065152003}
   verticalOrHorizontal: 0
   player: {fileID: 0}
   model: {fileID: 0}

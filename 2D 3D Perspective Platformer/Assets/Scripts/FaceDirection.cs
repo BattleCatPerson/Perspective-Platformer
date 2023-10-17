@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class FaceDirection : MonoBehaviour
 {
+    public static FaceDirection instance;
     [SerializeField] Vector3 initialEulerAngles;
-
     [SerializeField] Vector3 finalEulerAngles;
-
     [SerializeField] PlayerMovement player;
+    private void Awake()
+    {
+        instance = this;
+    }
     void Start()
     {
         player = GetComponentInParent<PlayerMovement>();
