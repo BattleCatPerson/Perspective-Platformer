@@ -26,6 +26,7 @@ public class CameraShift : MonoBehaviour
     [SerializeField] bool quickRotating;
     [SerializeField] float originalRotation;
     [SerializeField] float rotateDirection;
+    [SerializeField] bool canQuickRotate;
 
     public Transform currentCamera;
     private void Awake()
@@ -96,13 +97,14 @@ public class CameraShift : MonoBehaviour
     }
     public IEnumerator DelaySpeed(float t)
     {
+        SetSpeeds(false);
         yield return new WaitForSeconds(t);
         SetSpeeds(true);
     }
 
     public void QuickRotate(float direction)
     {
-        if (quickRotating) return;
+        if (quickRotating || !canQuickRotate) return;
         if (Mathf.Abs(direction) == 1)
         {
             rotateDirection = direction;
@@ -121,6 +123,8 @@ public class CameraShift : MonoBehaviour
 
         freeLook.m_XAxis.m_MaxSpeed = x;
         freeLook.m_YAxis.m_MaxSpeed = y;
+
+        canQuickRotate = enabled;
     }
 
     public void LockCamera(Dimension d)

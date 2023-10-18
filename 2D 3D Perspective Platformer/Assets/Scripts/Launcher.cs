@@ -83,8 +83,12 @@ public class Launcher : MonoBehaviour
             var obj = CameraShift.instance.currentCamera;
             if (obj.TryGetComponent<CinemachineFreeLook>(out CinemachineFreeLook c))
             {
-                c.LookAt = null;
-                c.Follow = null;
+                //c.LookAt = null;
+                //c.Follow = null;
+                CameraShift.instance.SetSpeeds(false);
+                Debug.Log(vcam.transform.eulerAngles);
+                c.m_XAxis.Value = vcam.transform.eulerAngles.y;
+                //set the freelook's x value to the y rotation /360 or something
             }
         }
     }
