@@ -5,11 +5,19 @@ using UnityEngine.SceneManagement;
 public class PauseMenuManager : MonoBehaviour
 {
     public PauseMenu pauseMenu;
+
+    [SerializeField] GameObject localCanvas;
     [SerializeField] GameObject selectedButton;
 
+    private void Awake()
+    {
+        localCanvas.SetActive(false);
+    }
     void Start()
     {
         pauseMenu = PauseMenu.instance;
+        pauseMenu.canvas = localCanvas;
+
         SetPauseAsFirstSelected.instance.Select(selectedButton);
     }
 

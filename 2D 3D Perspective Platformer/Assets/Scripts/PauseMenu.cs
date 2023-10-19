@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
@@ -17,6 +18,8 @@ public class PauseMenu : MonoBehaviour
 
     public static bool paused;
 
+    public GameObject canvas;
+
     private void Awake()
     {
         instance = this;
@@ -27,6 +30,9 @@ public class PauseMenu : MonoBehaviour
         paused = false;
 
         currentScene = GameManager.onMap ? mapPauseScene : levelPauseScene;
+
+        canvas = null;
+        SceneManager.LoadScene(currentScene, LoadSceneMode.Additive);
     }
     void OnPause()
     {
@@ -43,19 +49,22 @@ public class PauseMenu : MonoBehaviour
     public void QuitLevel()
     {
         paused = false;
+        GameManager.UnloadScene(currentScene);
         GameManager.LoadScene(sceneToQuit);
         Time.timeScale = 1f;
     }
     public void PauseGame()
     {
         Time.timeScale = 0f;
-        GameManager.LoadSceneAdditive(currentScene);
+        canvas.SetActive(true);
+        //GameManager.LoadSceneAdditive(currentScene);
         paused = true;
     }
     public void Resume()
     {
         Time.timeScale = 1f;
-        GameManager.UnloadScene(currentScene);
+        canvas.SetActive(false);
+        //GameManager.UnloadScene(currentScene);
         paused = false;
     }
     public void Restart()
@@ -63,10 +72,5 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         GameManager.UnloadScene(currentScene);
         GameManager.LoadScene();
-    }
-
-    public void Unload()
-    {
-
     }
 }
